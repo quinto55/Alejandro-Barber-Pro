@@ -75,9 +75,11 @@ Displayed with first name only. A small non-clickable line reads "Verified revie
 
 | Asset | Source | Handling |
 |---|---|---|
-| ABP crown logo | Booksy CDN, 1023×1023 JPEG, black on light gray | Hand-traced to SVG. Raster black-on-gray cannot sit on a black background. SVG gives gold and white variants, crisp at any size, and a favicon. |
+| ABP crown logo | Booksy CDN, 1023×1023 JPEG, black on light gray | Converted to a **recolourable alpha-mask PNG**, coloured at render time via CSS `mask-image` + `background`. Raster black-on-gray cannot sit on a black background. |
 | Portfolio | 32 photos, Booksy CDN `service_photos/`, 736×736 JPEG, ~75 KB each | Downloaded into `assets/portfolio/`. Never hotlinked — a third-party CDN is not a dependency this site should carry. |
 | Storefront photo | Booksy CDN `biz_photo/` | Optional, for the location section. |
+
+**Amendment, 2026-08-01 (planning):** the logo was originally specced as a hand-traced SVG. On inspecting the source — a serif `ABp` wordmark plus a hand-drawn crown on a soft gray gradient — tracing a serif face without the original font would have lost fidelity. The alpha-mask approach preserves his exact mark, recolours to gold or bone from a single file, and stays crisp far beyond the ~200px it ever renders at. Validated against the real file during planning.
 
 Instagram logged-out exposes only 12 grid images versus Booksy's 32, so Booksy is the primary source. Instagram remains an option later if Alejandro provides login access.
 
