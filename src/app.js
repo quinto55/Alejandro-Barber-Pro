@@ -6,6 +6,7 @@ import { initI18n, setLang, currentLang } from './i18n.js';
 import { renderServices } from './services.js';
 import { initPortfolio } from './portfolio.js';
 import { renderReviews, renderHours, renderAddress } from './visit.js';
+import { initWizard, render as renderWizard } from './wizard.js';
 
 function populateFooterSocialLinks() {
   const links = {
@@ -126,6 +127,18 @@ async function init() {
   document.addEventListener('abp:langchange', renderReviews);
   document.addEventListener('abp:langchange', renderHours);
   document.addEventListener('abp:langchange', renderAddress);
+
+  // initWizard() must run exactly once: besides its own first render, it
+  // registers a document-level click listener (the #book?service= deep
+  // link delegate) that would duplicate on every language switch if this
+  // were re-run from the 'abp:langchange' handler below. That's the same
+  // bug class Task 10's review specifically checked for elsewhere, so the
+  // wizard's own re-translation hook is its exported `render`, not
+  // `initWizard` again — it redraws the current step from the dictionary
+  // that was just loaded without resetting wizard state or re-registering
+  // any listener.
+  initWizard();
+  document.addEventListener('abp:langchange', renderWizard);
 }
 
 if (document.readyState === 'loading') {

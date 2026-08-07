@@ -638,6 +638,199 @@ main { display: block; }
 /* Visual separation between the shell's section shells. */
 main > section + section { border-top: 1px solid var(--ink-3); }
 
+/* ---- Booking wizard ---- */
+.book-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+  margin: var(--s3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.book-step {
+  color: var(--bone-dim);
+  font-size: .85rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding-bottom: var(--s1);
+  border-bottom: 2px solid transparent;
+}
+.book-step.is-done { color: var(--bone); }
+.book-step.is-current {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+.book-panel {
+  margin-top: var(--s4);
+  max-width: 40rem;
+}
+.book-step-panel h3 {
+  font-size: 1.3rem;
+  margin-bottom: var(--s3);
+}
+.book-nav {
+  display: flex;
+  gap: var(--s2);
+  margin-top: var(--s4);
+}
+
+/* Step 1: service radiogroup */
+.service-radiogroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.service-radio {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s2) var(--s3);
+  background: var(--ink-2);
+  border: 1px solid var(--ink-3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color .15s ease;
+}
+.service-radio:hover { border-color: var(--gold-soft); }
+.service-radio.is-selected {
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+.service-radio-name { color: var(--bone); font-weight: 600; }
+.service-radio-meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s2);
+  flex: 0 0 auto;
+}
+.service-radio-price { color: var(--gold-soft); font-weight: 600; }
+.service-radio-dur { color: var(--bone-dim); font-size: .85rem; white-space: nowrap; }
+
+/* Step 2: date list */
+.date-list { display: flex; flex-direction: column; gap: var(--s2); }
+.date-month {
+  margin: var(--s3) 0 0;
+  color: var(--bone-dim);
+  font-size: .85rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.date-month-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(2.75rem, 1fr));
+  gap: var(--s1);
+}
+.date-btn {
+  padding: var(--s1) 0;
+  background: var(--ink-2);
+  color: var(--bone);
+  border: 1px solid var(--ink-3);
+  border-radius: 2px;
+  cursor: pointer;
+}
+.date-btn:hover { border-color: var(--gold-soft); }
+.date-btn.is-selected {
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 600;
+}
+.date-btn.is-disabled,
+.date-btn:disabled {
+  color: var(--bone-dim);
+  border-color: var(--ink-3);
+  background: transparent;
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+/* Step 3: time slots */
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+  gap: var(--s1);
+}
+.slot-btn {
+  padding: var(--s1) var(--s2);
+  background: var(--ink-2);
+  color: var(--bone);
+  border: 1px solid var(--ink-3);
+  border-radius: 2px;
+  cursor: pointer;
+}
+.slot-btn:hover { border-color: var(--gold-soft); }
+.slot-btn.is-selected {
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 600;
+}
+.book-status { color: var(--bone-dim); }
+
+/* Step 4: form, summary, notices */
+.book-summary {
+  color: var(--gold-soft);
+  font-weight: 600;
+  margin: 0 0 var(--s3);
+}
+.book-mock-notice {
+  padding: var(--s2) var(--s3);
+  margin: 0 0 var(--s3);
+  background: var(--ink-2);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  color: var(--gold-soft);
+  font-size: .9rem;
+}
+.book-error-banner {
+  padding: var(--s2) var(--s3);
+  margin: 0 0 var(--s3);
+  background: var(--ink-2);
+  border: 1px solid var(--danger);
+  border-radius: 4px;
+  color: var(--danger);
+  font-size: .9rem;
+}
+.book-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+.book-field {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+.book-field label {
+  color: var(--bone);
+  font-size: .9rem;
+  font-weight: 600;
+}
+.book-field input,
+.book-field textarea {
+  padding: var(--s1) var(--s2);
+  background: var(--ink-2);
+  color: var(--bone);
+  border: 1px solid var(--ink-3);
+  border-radius: 2px;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+}
+.book-field input:focus-visible,
+.book-field textarea:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+.book-field input[aria-invalid="true"],
+.book-field textarea[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+.book-field-error {
+  margin: 0;
+  color: var(--danger);
+  font-size: .85rem;
+}
+.book-field-error[hidden] { display: none; }
+
 /* ---- Footer ---- */
 .site-footer {
   background: var(--ink-2);
