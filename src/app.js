@@ -4,6 +4,7 @@
 import { BUSINESS } from './config.js';
 import { initI18n, setLang, currentLang } from './i18n.js';
 import { renderServices } from './services.js';
+import { initPortfolio } from './portfolio.js';
 
 function populateFooterSocialLinks() {
   const links = {
@@ -95,6 +96,11 @@ async function init() {
   // follow future language switches.
   renderServices();
   document.addEventListener('abp:langchange', renderServices);
+
+  // initPortfolio() renders the grid itself and registers its own
+  // 'abp:langchange' listener (mirroring renderServices() above), so it
+  // only needs to be called once here.
+  initPortfolio();
 }
 
 if (document.readyState === 'loading') {

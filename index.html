@@ -88,7 +88,28 @@
     <section id="work">
       <div class="wrap">
         <h2 data-i18n="work.title">The work</h2>
+        <p class="work-sub" data-i18n="work.sub">Every cut here is his own.</p>
+        <div id="work-grid" class="work-grid"></div>
+        <button type="button" id="work-more" class="btn btn-ghost work-more"></button>
       </div>
+
+      <!-- Nested inside #work (rather than as a sibling section) so it
+           doesn't break the `main > section + section` adjacent-sibling
+           border rule below. The dialog itself is position: fixed and is
+           promoted to the top layer on showModal(), so its ancestor's
+           layout/overflow has no effect on how it renders. -->
+      <dialog id="lightbox" class="lightbox">
+        <button type="button" id="lightbox-close" class="lightbox-close" data-i18n-attr="aria-label:work.close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <button type="button" id="lightbox-prev" class="lightbox-nav lightbox-prev" data-i18n-attr="aria-label:work.prev">
+          <span aria-hidden="true">&lsaquo;</span>
+        </button>
+        <img id="lightbox-img" src="" alt="">
+        <button type="button" id="lightbox-next" class="lightbox-nav lightbox-next" data-i18n-attr="aria-label:work.next">
+          <span aria-hidden="true">&rsaquo;</span>
+        </button>
+      </dialog>
     </section>
 
     <section id="about">

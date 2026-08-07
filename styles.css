@@ -381,6 +381,120 @@ main { display: block; }
   box-shadow: inset 0 2px 0 var(--gold);
 }
 
+/* ---- Work / portfolio ---- */
+.work-sub {
+  margin: var(--s2) 0 0;
+  color: var(--bone-dim);
+  font-size: 1.05rem;
+}
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--s2);
+  margin-top: var(--s4);
+}
+/* Square tiles regardless of a given photo's native dimensions: aspect-ratio
+   plus object-fit: cover on the <img> means the box never depends on the
+   image having loaded, so the grid can't shift as photos arrive. */
+.shot {
+  display: block;
+  padding: 0;
+  border: 1px solid var(--ink-3);
+  border-radius: 2px;
+  background: var(--ink-2);
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color .15s ease, outline-color .15s ease;
+}
+.shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.shot:hover,
+.shot:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-color: var(--gold);
+}
+.work-more {
+  display: block;
+  margin: var(--s4) auto 0;
+}
+
+/* ---- Lightbox ---- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  max-width: min(90vw, 60rem);
+  max-height: 90vh;
+  margin: auto;
+  padding: var(--s3);
+  background: var(--ink-2);
+  color: var(--bone);
+  border: 1px solid var(--ink-3);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox:not([open]) { display: none; }
+.lightbox::backdrop {
+  background: var(--ink);
+  opacity: .9;
+}
+#lightbox-img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(90vh - var(--s6));
+  object-fit: contain;
+  border-radius: 2px;
+}
+.lightbox-close,
+.lightbox-nav {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  background: var(--ink-2);
+  color: var(--bone);
+  border: 1px solid var(--ink-3);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color .15s ease, color .15s ease;
+}
+.lightbox-close:hover,
+.lightbox-nav:hover,
+.lightbox-close:focus-visible,
+.lightbox-nav:focus-visible {
+  border-color: var(--gold);
+  color: var(--gold);
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.lightbox-close {
+  top: var(--s2);
+  right: var(--s2);
+}
+.lightbox-nav {
+  top: 50%;
+  transform: translateY(-50%);
+}
+.lightbox-prev { left: var(--s2); }
+.lightbox-next { right: var(--s2); }
+
+@media (max-width: 640px) {
+  .lightbox { max-width: 100vw; max-height: 100vh; border-radius: 0; padding: var(--s2); }
+  .lightbox-close, .lightbox-nav { width: 2.25rem; height: 2.25rem; font-size: 1.25rem; }
+}
+
 /* Visual separation between the shell's section shells. */
 main > section + section { border-top: 1px solid var(--ink-3); }
 
