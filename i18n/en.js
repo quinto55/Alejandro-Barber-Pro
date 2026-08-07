@@ -2,6 +2,10 @@ export default {
   'meta.title': 'Alejandro Barber Pro — NYC Taper Fade Specialist',
   'meta.description': 'Precision fades, beard work and colour in Long Island City. 5.0 stars from 147 clients. Book online.',
 
+  'a11y.skip': 'Skip to content',
+
+  'nav.primary': 'Main navigation',
+  'nav.toggle': 'Menu',
   'nav.services': 'Services',
   'nav.work': 'Work',
   'nav.about': 'About',

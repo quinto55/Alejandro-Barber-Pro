@@ -2,6 +2,10 @@ export default {
   'meta.title': 'Alejandro Barber Pro — 纽约锥形渐变发型专家',
   'meta.description': '精准渐变发型、胡须造型与染色服务，位于长岛市。147位顾客给出5.0星评价。在线预约。',
 
+  'a11y.skip': '跳至内容',
+
+  'nav.primary': '主导航',
+  'nav.toggle': '菜单',
   'nav.services': '服务项目',
   'nav.work': '作品',
   'nav.about': '关于',

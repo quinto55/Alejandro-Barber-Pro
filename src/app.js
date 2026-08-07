@@ -1,6 +1,6 @@
-// Page shell wiring: footer social links, copyright year, and the mobile nav.
-// Later tasks (i18n runtime, hero/services, portfolio, visit, booking wizard)
-// add their own imports and init calls here.
+// Page shell wiring: footer social links, footer copyright year, and the
+// mobile nav. Later tasks (i18n runtime, hero/services, portfolio, visit,
+// booking wizard) add their own imports and init calls here.
 import { BUSINESS } from './config.js';
 
 function populateFooterSocialLinks() {
@@ -15,9 +15,17 @@ function populateFooterSocialLinks() {
   }
 }
 
-function setCopyrightYear() {
-  const el = document.getElementById('copyright-year');
-  if (el) el.textContent = String(new Date().getFullYear());
+// The footer copyright string ("© {year} Alejandro Barber Pro") is a
+// data-i18n key with a {year} placeholder. Task 8's i18n runtime applies
+// translations with `el.textContent = t(el.dataset.i18n, JSON.parse(el.dataset.i18nVars || 'null'))`,
+// which would overwrite any nested DOM node we tried to update directly.
+// So instead of setting textContent ourselves, we stamp the current year
+// onto data-i18n-vars as JSON — the same mechanism every other
+// {placeholder} substitution uses — so `t()` resolves it correctly on
+// initial load and on every subsequent `abp:langchange` re-render.
+function setFooterCopyrightYear() {
+  const el = document.getElementById('footer-copyright');
+  if (el) el.dataset.i18nVars = JSON.stringify({ year: new Date().getFullYear() });
 }
 
 function setupHamburger() {
@@ -42,7 +50,7 @@ function setupHamburger() {
 
 function init() {
   populateFooterSocialLinks();
-  setCopyrightYear();
+  setFooterCopyrightYear();
   setupHamburger();
   // Smooth-scrolling for in-page nav anchors is handled declaratively via
   // `scroll-behavior: smooth` in styles.css — no duplicate JS scroll handler.
