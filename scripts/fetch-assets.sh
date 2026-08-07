@@ -9,7 +9,10 @@ LOGO="$CDN/logo/1cb19e2a7c0044eaaae241228b07f1-a-l-e-j-a-n-d-r-o-b-a-r-b-e-r--lo
 
 mkdir -p assets/portfolio
 
-[ -f assets/logo-src.jpg ] || curl -fsS -o assets/logo-src.jpg "$LOGO"
+if [ ! -f assets/logo-src.jpg ]; then
+  curl -fsS -o assets/logo-src.jpg.part "$LOGO"
+  mv assets/logo-src.jpg.part assets/logo-src.jpg
+fi
 
 n=0
 while read -r id; do
@@ -17,7 +20,8 @@ while read -r id; do
   n=$((n+1))
   out=$(printf 'assets/portfolio/cut-%02d.jpg' "$n")
   [ -f "$out" ] && continue
-  curl -fsS -o "$out" "$CDN/service_photos/$id.jpeg"
+  curl -fsS -o "$out.part" "$CDN/service_photos/$id.jpeg"
+  mv "$out.part" "$out"
 done < scripts/ids.txt
 
 echo "logo: $([ -f assets/logo-src.jpg ] && echo ok || echo MISSING)"
