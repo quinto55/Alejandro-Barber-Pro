@@ -60,10 +60,17 @@ export function initPortfolio() {
 // when it's closed. Tracked at module scope so renderPortfolio() can
 // re-translate the open image's alt text on a language switch (see above).
 let current = null;
-// The tile <button> that was activated to open the lightbox, so focus can
-// be explicitly returned to it on close rather than relying on whatever
-// the dialog implementation happens to do.
-let trigger = null;
+// Index (1-based) of the tile <button> that was activated to open the
+// lightbox, so focus can be explicitly returned to it on close rather than
+// relying on whatever the dialog implementation happens to do. Tracked by
+// index rather than a raw node reference: a language switch while the
+// lightbox is open fires abp:langchange -> renderPortfolio(), which rebuilds
+// every tile via grid.replaceChildren(...), detaching any previously-stored
+// node from the document. focus() on a detached node silently no-ops, so a
+// stored node reference would go stale; the index survives the rebuild
+// (it's just a number), and the live tile at that index is re-resolved from
+// the DOM at close time.
+let triggerIndex = null;
 
 function initLightbox() {
   const dialog = document.querySelector('#lightbox');
@@ -90,8 +97,11 @@ function initLightbox() {
 
   dialog.addEventListener('close', () => {
     current = null;
-    trigger?.focus();
-    trigger = null;
+    if (triggerIndex !== null) {
+      const el = document.querySelector(`.shot[data-index="${triggerIndex}"]`);
+      el?.focus();
+    }
+    triggerIndex = null;
   });
 }
 
@@ -113,7 +123,10 @@ function show(n) {
 export function openLightbox(n) {
   const dialog = document.querySelector('#lightbox');
   if (!dialog) return;
-  trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  // n is always the data-index of the tile that was clicked to get here
+  // (see the grid click handler in initPortfolio), so it doubles as the
+  // trigger's index directly.
+  triggerIndex = n;
   show(n);
   dialog.showModal();
 }
