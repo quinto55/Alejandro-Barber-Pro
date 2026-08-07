@@ -1,7 +1,8 @@
-// Page shell wiring: footer social links, footer copyright year, and the
-// mobile nav. Later tasks (i18n runtime, hero/services, portfolio, visit,
-// booking wizard) add their own imports and init calls here.
+// Page shell wiring: footer social links, footer copyright year, the
+// mobile nav, and the trilingual runtime. Later tasks (hero/services,
+// portfolio, visit, booking wizard) add their own imports and init calls here.
 import { BUSINESS } from './config.js';
+import { initI18n, setLang, currentLang } from './i18n.js';
 
 function populateFooterSocialLinks() {
   const links = {
@@ -48,12 +49,27 @@ function setupHamburger() {
   });
 }
 
-function init() {
+function setupLangSelect() {
+  const picker = document.querySelector('#lang-select');
+  if (!picker) return;
+  picker.value = currentLang();
+  picker.addEventListener('change', (e) => setLang(e.target.value));
+}
+
+async function init() {
+  // DOM-prep steps must run before the first `applyTranslations()` call
+  // (fired synchronously inside `initI18n()` -> `setLang()`), since that
+  // first render reads data-i18n-vars off elements like #footer-copyright.
+  // Running initI18n() before this would render the footer's {year}
+  // placeholder unsubstituted on first paint.
   populateFooterSocialLinks();
   setFooterCopyrightYear();
   setupHamburger();
   // Smooth-scrolling for in-page nav anchors is handled declaratively via
   // `scroll-behavior: smooth` in styles.css — no duplicate JS scroll handler.
+
+  await initI18n();
+  setupLangSelect();
 }
 
 if (document.readyState === 'loading') {
