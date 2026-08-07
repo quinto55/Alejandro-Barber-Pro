@@ -58,11 +58,19 @@
 
   <main id="main">
     <section class="hero">
+      <div class="hero-media" aria-hidden="true">
+        <img class="hero-photo" src="assets/portfolio/cut-01.jpg" alt="" width="736" height="736">
+        <div class="hero-scrim"></div>
+      </div>
       <div class="wrap hero-inner">
+        <span class="logo hero-logo" aria-hidden="true"></span>
         <p class="eyebrow" data-i18n="hero.eyebrow">Long Island City, NY</p>
         <h1 data-i18n="hero.title">NYC Taper Fade Specialist</h1>
         <p class="hero-sub" data-i18n="hero.sub">Precision fades, sharp beard work and colour — by appointment.</p>
-        <p class="hero-rating" data-i18n="hero.rating">5.0 from 147 clients</p>
+        <div class="hero-rating-row">
+          <span class="hero-stars" aria-hidden="true">★★★★★</span>
+          <p class="hero-rating" data-i18n="hero.rating">5.0 from 147 clients</p>
+        </div>
         <div class="hero-cta">
           <a class="btn" href="#book" data-i18n="hero.cta">Book an appointment</a>
           <a class="btn btn-ghost" href="#work" data-i18n="hero.ctaSecondary">See the work</a>
@@ -73,6 +81,7 @@
     <section id="services">
       <div class="wrap">
         <h2 data-i18n="services.title">Services</h2>
+        <div id="service-list" class="service-grid"></div>
       </div>
     </section>
 

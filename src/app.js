@@ -3,6 +3,7 @@
 // portfolio, visit, booking wizard) add their own imports and init calls here.
 import { BUSINESS } from './config.js';
 import { initI18n, setLang, currentLang } from './i18n.js';
+import { renderServices } from './services.js';
 
 function populateFooterSocialLinks() {
   const links = {
@@ -27,6 +28,21 @@ function populateFooterSocialLinks() {
 function setFooterCopyrightYear() {
   const el = document.getElementById('footer-copyright');
   if (el) el.dataset.i18nVars = JSON.stringify({ year: new Date().getFullYear() });
+}
+
+// Same mechanism, same ordering requirement as the footer year above: the
+// hero rating line ("5.0 from 147 clients") is a data-i18n key with
+// {rating}/{count} placeholders. It must be stamped onto data-i18n-vars
+// before the first applyTranslations() call (inside initI18n() -> setLang()),
+// or the first paint leaks the literal "{rating}"/"{count}" tokens.
+function setHeroRatingVars() {
+  const el = document.querySelector('.hero-rating');
+  if (el) {
+    el.dataset.i18nVars = JSON.stringify({
+      rating: BUSINESS.rating.toFixed(1),
+      count: BUSINESS.reviewCount,
+    });
+  }
 }
 
 function setupHamburger() {
@@ -64,12 +80,21 @@ async function init() {
   // placeholder unsubstituted on first paint.
   populateFooterSocialLinks();
   setFooterCopyrightYear();
+  setHeroRatingVars();
   setupHamburger();
   // Smooth-scrolling for in-page nav anchors is handled declaratively via
   // `scroll-behavior: smooth` in styles.css — no duplicate JS scroll handler.
 
   await initI18n();
   setupLangSelect();
+
+  // Services need the dictionary that initI18n() just loaded, so the first
+  // render happens here rather than at module load. initI18n() -> setLang()
+  // already dispatched one 'abp:langchange' event before this listener
+  // existed, so we render once directly and then listen for the ones that
+  // follow future language switches.
+  renderServices();
+  document.addEventListener('abp:langchange', renderServices);
 }
 
 if (document.readyState === 'loading') {
