@@ -1,0 +1,10 @@
+{
+  "name": "alejandro-barber-pro",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/",
+    "serve": "python3 -m http.server 8080"
+  }
+}
