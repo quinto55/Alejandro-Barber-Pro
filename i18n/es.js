@@ -55,9 +55,9 @@ export default {
   'about.amenity.wifi': 'Wi-Fi',
   'about.amenity.mobile': 'Servicio a domicilio disponible',
 
-  'reviews.title': 'What clients say',
-  'reviews.source': 'Verified reviews from Booksy',
-  'reviews.summary': '{rating} average from {count} reviews',
+  'reviews.title': 'Lo que dicen los clientes',
+  'reviews.source': 'Reseñas verificadas de Booksy',
+  'reviews.summary': '{rating} de promedio en {count} reseñas',
   'reviews.julio': 'Alejandro is the best, super nice guy and gave me a great hair cut',
   'reviews.erick': 'El mejor, nunca falla una 🔥',
   'reviews.leonardo': 'Best cuts',

@@ -55,9 +55,9 @@ export default {
   'about.amenity.wifi': 'Wi-Fi',
   'about.amenity.mobile': '提供上门服务',
 
-  'reviews.title': 'What clients say',
-  'reviews.source': 'Verified reviews from Booksy',
-  'reviews.summary': '{rating} average from {count} reviews',
+  'reviews.title': '客户评价',
+  'reviews.source': '来自Booksy的认证评价',
+  'reviews.summary': '{rating}分，来自{count}条评价',
   'reviews.julio': 'Alejandro is the best, super nice guy and gave me a great hair cut',
   'reviews.erick': 'El mejor, nunca falla una 🔥',
   'reviews.leonardo': 'Best cuts',

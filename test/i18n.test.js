@@ -27,7 +27,7 @@ test('no value is empty', () => {
 });
 
 test('review text is verbatim and identical across languages', () => {
-  const reviewKeys = Object.keys(en).filter(k => k.startsWith('reviews.'));
+  const reviewKeys = ['reviews.julio', 'reviews.erick', 'reviews.leonardo', 'reviews.anthony', 'reviews.alex', 'reviews.khan'];
   assert.ok(reviewKeys.length >= 6);
   for (const k of reviewKeys) {
     assert.equal(es[k], en[k], `${k} must not be translated`);
