@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="meta.title">Alejandro Barber Pro — NYC Taper Fade Specialist</title>
+  <meta name="description" content="Precision fades, beard work and colour in Long Island City. 5.0 stars from 147 clients. Book online." data-i18n-attr="content:meta.description">
+  <link rel="icon" href="assets/favicon.png">
+
+  <!-- Self-hosted fonts: preload the two above-the-fold weights. -->
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/cormorant-garamond-600.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400.woff2" crossorigin>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="a11y.skip">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#main" aria-label="Alejandro Barber Pro">
+        <span class="crown" aria-hidden="true"></span>
+        <span class="wordmark">Alejandro Barber Pro</span>
+      </a>
+
+      <button
+        type="button"
+        class="hamburger"
+        aria-expanded="false"
+        aria-controls="nav-menu"
+        aria-label="Menu"
+        data-i18n-attr="aria-label:nav.toggle"
+      >
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+
+      <nav id="nav-menu" class="nav" aria-label="Primary">
+        <ul class="nav-list">
+          <li><a href="#services" data-i18n="nav.services">Services</a></li>
+          <li><a href="#work" data-i18n="nav.work">Work</a></li>
+          <li><a href="#about" data-i18n="nav.about">About</a></li>
+          <li><a href="#reviews" data-i18n="nav.reviews">Reviews</a></li>
+          <li><a href="#visit" data-i18n="nav.visit">Visit</a></li>
+        </ul>
+        <div class="nav-actions">
+          <select id="lang-select" class="lang-select" aria-label="Language" data-i18n-attr="aria-label:lang.label">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="zh">中文</option>
+          </select>
+          <a class="btn" href="#book" data-i18n="nav.book">Book</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="wrap hero-inner">
+        <p class="eyebrow" data-i18n="hero.eyebrow">Long Island City, NY</p>
+        <h1 data-i18n="hero.title">NYC Taper Fade Specialist</h1>
+        <p class="hero-sub" data-i18n="hero.sub">Precision fades, sharp beard work and colour — by appointment.</p>
+        <p class="hero-rating" data-i18n="hero.rating">5.0 from 147 clients</p>
+        <div class="hero-cta">
+          <a class="btn" href="#book" data-i18n="hero.cta">Book an appointment</a>
+          <a class="btn btn-ghost" href="#work" data-i18n="hero.ctaSecondary">See the work</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="wrap">
+        <h2 data-i18n="services.title">Services</h2>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="wrap">
+        <h2 data-i18n="work.title">The work</h2>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="wrap">
+        <h2 data-i18n="about.title">About Alejandro</h2>
+      </div>
+    </section>
+
+    <section id="reviews">
+      <div class="wrap">
+        <h2 data-i18n="reviews.title">What clients say</h2>
+      </div>
+    </section>
+
+    <section id="visit">
+      <div class="wrap">
+        <h2 data-i18n="visit.title">Visit</h2>
+      </div>
+    </section>
+
+    <section id="book">
+      <div class="wrap">
+        <h2 data-i18n="book.title">Book an appointment</h2>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="logo" aria-hidden="true"></span>
+          <span class="wordmark">Alejandro Barber Pro</span>
+        </div>
+        <div class="footer-social">
+          <p class="footer-follow" data-i18n="footer.follow">Follow</p>
+          <ul class="social-list">
+            <li><a id="social-instagram" href="#" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a></li>
+            <li><a id="social-facebook" href="#" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a></li>
+            <li><a id="social-tiktok" href="#" target="_blank" rel="noopener" aria-label="TikTok">TikTok</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-copyright" data-i18n="footer.rights">© <span id="copyright-year">2026</span> Alejandro Barber Pro</p>
+    </div>
+  </footer>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
