@@ -5,6 +5,7 @@ import { BUSINESS } from './config.js';
 import { initI18n, setLang, currentLang } from './i18n.js';
 import { renderServices } from './services.js';
 import { initPortfolio } from './portfolio.js';
+import { renderReviews, renderHours, renderAddress } from './visit.js';
 
 function populateFooterSocialLinks() {
   const links = {
@@ -73,6 +74,18 @@ function setupLangSelect() {
   picker.addEventListener('change', (e) => setLang(e.target.value));
 }
 
+// The Google Maps embed src is built from BUSINESS.mapQuery (the single
+// source of truth for his address, verified against Booksy — see
+// config.js) rather than being hand-encoded into index.html, so the two
+// never drift apart. It doesn't depend on the i18n dictionary and doesn't
+// change with language, so — unlike renderReviews()/renderHours()/
+// renderAddress() below — it's set once here rather than re-run on
+// 'abp:langchange'.
+function setMapEmbedSrc() {
+  const iframe = document.getElementById('visit-map');
+  if (iframe) iframe.src = `https://www.google.com/maps?q=${encodeURIComponent(BUSINESS.mapQuery)}&output=embed`;
+}
+
 async function init() {
   // DOM-prep steps must run before the first `applyTranslations()` call
   // (fired synchronously inside `initI18n()` -> `setLang()`), since that
@@ -82,6 +95,7 @@ async function init() {
   populateFooterSocialLinks();
   setFooterCopyrightYear();
   setHeroRatingVars();
+  setMapEmbedSrc();
   setupHamburger();
   // Smooth-scrolling for in-page nav anchors is handled declaratively via
   // `scroll-behavior: smooth` in styles.css — no duplicate JS scroll handler.
@@ -101,6 +115,17 @@ async function init() {
   // 'abp:langchange' listener (mirroring renderServices() above), so it
   // only needs to be called once here.
   initPortfolio();
+
+  // Same reasoning as renderServices() above: renderReviews()/renderHours()/
+  // renderAddress() all call t() internally, so the first render happens
+  // here (after the dictionary has loaded) and each re-runs on every
+  // subsequent language switch.
+  renderReviews();
+  renderHours();
+  renderAddress();
+  document.addEventListener('abp:langchange', renderReviews);
+  document.addEventListener('abp:langchange', renderHours);
+  document.addEventListener('abp:langchange', renderAddress);
 }
 
 if (document.readyState === 'loading') {

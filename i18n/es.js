@@ -75,6 +75,7 @@ export default {
   'visit.directions': 'Cómo llegar',
   'visit.closed': 'Cerrado',
   'visit.vipNote': 'Los domingos son solo VIP y fuera de horario, con aprobación previa.',
+  'visit.mapTitle': 'Mapa hacia Alejandro Barber Pro',
   'day.0': 'Domingo',
   'day.1': 'Lunes',
   'day.2': 'Martes',

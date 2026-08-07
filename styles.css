@@ -495,6 +495,146 @@ main { display: block; }
   .lightbox-close, .lightbox-nav { width: 2.25rem; height: 2.25rem; font-size: 1.25rem; }
 }
 
+/* ---- About / amenities ---- */
+.about-body {
+  margin: var(--s3) 0 0;
+  max-width: 42rem;
+  color: var(--bone-dim);
+  font-size: 1.05rem;
+}
+.about-amenities-title {
+  margin: var(--s4) 0 0;
+  font-size: 1.3rem;
+}
+.amenity-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--s1) var(--s3);
+  margin: var(--s2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.amenity-list li {
+  padding: var(--s1) 0;
+  border-bottom: 1px solid var(--ink-3);
+  color: var(--bone-dim);
+  font-size: .95rem;
+}
+
+/* ---- Reviews ---- */
+.reviews-summary {
+  margin: var(--s3) 0 0;
+  color: var(--gold-soft);
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+.reviews-source {
+  margin: var(--s1) 0 0;
+  color: var(--bone-dim);
+  font-size: .85rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--s3);
+  margin: var(--s4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.review {
+  padding: var(--s3);
+  background: var(--ink-2);
+  border: 1px solid var(--ink-3);
+  border-radius: 4px;
+}
+.review-text {
+  margin: 0;
+  color: var(--bone);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.review-text::before { content: '“'; }
+.review-text::after { content: '”'; }
+.review-name {
+  margin: var(--s2) 0 0;
+  color: var(--gold-soft);
+  font-size: .85rem;
+  font-weight: 600;
+}
+
+/* ---- Visit: hours, address, map ---- */
+.visit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: var(--s5);
+  margin-top: var(--s4);
+}
+.visit-hours h3,
+.visit-location h3 {
+  font-size: 1.3rem;
+  margin-bottom: var(--s2);
+}
+.hours-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.hours-table tr {
+  border-bottom: 1px solid var(--ink-3);
+}
+.hours-table th,
+.hours-table td {
+  padding: var(--s1) 0;
+  text-align: left;
+  font-weight: 400;
+  color: var(--bone-dim);
+  font-size: .95rem;
+}
+.hours-table th {
+  color: var(--bone);
+  font-weight: 600;
+}
+.hours-table td {
+  text-align: right;
+}
+/* Today's row gets picked out in gold so a walk-in can find it at a glance. */
+.hours-table tr.is-today th,
+.hours-table tr.is-today td {
+  color: var(--gold-soft);
+  font-weight: 600;
+}
+.vip-note {
+  margin: var(--s2) 0 0;
+  color: var(--bone-dim);
+  font-size: .85rem;
+  font-style: italic;
+}
+.address {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  margin: 0 0 var(--s2);
+  color: var(--bone-dim);
+  font-size: .95rem;
+}
+.directions-link {
+  display: inline-block;
+  margin-bottom: var(--s3);
+}
+.map {
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--ink-3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 /* Visual separation between the shell's section shells. */
 main > section + section { border-top: 1px solid var(--ink-3); }
 

@@ -75,6 +75,7 @@ export default {
   'visit.directions': 'Get directions',
   'visit.closed': 'Closed',
   'visit.vipNote': 'Sundays are VIP and after-hours only, by prior approval.',
+  'visit.mapTitle': 'Map to Alejandro Barber Pro',
   'day.0': 'Sunday',
   'day.1': 'Monday',
   'day.2': 'Tuesday',

@@ -75,6 +75,7 @@ export default {
   'visit.directions': '获取路线',
   'visit.closed': '休息',
   'visit.vipNote': '周日仅提供VIP及非营业时间服务，须提前获得批准。',
+  'visit.mapTitle': '前往Alejandro Barber Pro的地图',
   'day.0': '星期日',
   'day.1': '星期一',
   'day.2': '星期二',
