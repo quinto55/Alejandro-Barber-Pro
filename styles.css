@@ -321,6 +321,11 @@ main { display: block; }
 }
 
 /* ---- Services ---- */
+.services-note {
+  margin: var(--s2) 0 0;
+  color: var(--bone-dim);
+  font-size: .9rem;
+}
 .service-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
@@ -423,6 +428,7 @@ main { display: block; }
   display: block;
   margin: var(--s4) auto 0;
 }
+.work-more[hidden] { display: none; }
 
 /* ---- Lightbox ---- */
 .lightbox {
@@ -765,6 +771,11 @@ main > section + section { border-top: 1px solid var(--ink-3); }
   font-weight: 600;
 }
 .book-status { color: var(--bone-dim); }
+.book-note {
+  margin: var(--s2) 0 0;
+  color: var(--bone-dim);
+  font-size: .9rem;
+}
 
 /* Step 4: form, summary, notices */
 .book-summary {

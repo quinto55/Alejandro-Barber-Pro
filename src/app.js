@@ -101,7 +101,16 @@ async function init() {
   // Smooth-scrolling for in-page nav anchors is handled declaratively via
   // `scroll-behavior: smooth` in styles.css — no duplicate JS scroll handler.
 
-  await initI18n();
+  // A failed dictionary fetch (network blip, hosting hiccup) must not abort
+  // the rest of init(): every content-rendering call below depends on this
+  // resolving, and t() already falls back to the literal key string when
+  // the dictionary is empty (see src/i18n.js), so degrading to key-text is
+  // far better than a page of empty section headings with nothing under them.
+  try {
+    await initI18n();
+  } catch (err) {
+    console.error('i18n load failed', err);
+  }
   setupLangSelect();
 
   // Services need the dictionary that initI18n() just loaded, so the first

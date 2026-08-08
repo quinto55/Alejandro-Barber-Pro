@@ -156,6 +156,18 @@ function renderStep1() {
   });
 
   panel.append(group);
+
+  // Pattern B (JS-rendered content, per the two-pattern discipline
+  // established since Task 11): this element is owned entirely by
+  // wizard.js's render cycle, so it's built with t() directly rather than
+  // a data-i18n attribute. Placed right where a client is looking at a
+  // bare "$60+" right before committing — exactly where the spec's stated
+  // goal ("no client arrives expecting a fixed price") matters most.
+  const note = document.createElement('p');
+  note.className = 'book-note';
+  note.textContent = t('services.note');
+  panel.append(note);
+
   panel.append(buildNav({ onNext: () => go(2), nextDisabled: !state.serviceId }));
   return panel;
 }
@@ -172,6 +184,13 @@ function monthLabel(dateStr) {
 
 function chooseDate(d) {
   if (weekdayOf(d) === 0) return; // Sundays aren't choosable.
+  // Defense-in-depth (see the deep-link delegate in initWizard() below for
+  // the primary fix): a completed booking's result must never survive into
+  // a fresh date/time pick, or step 4 would render the stale success panel
+  // instead of a real details form. Only null the result itself here (not
+  // a full resetState()) — serviceId is already set for the booking in
+  // progress and must not be wiped.
+  state.result = null;
   state.date = d;
   state.step = 3;
   state.errors.submit = null;
@@ -493,6 +512,10 @@ export function initWizard() {
   document.addEventListener('click', e => {
     const btn = e.target.closest('[data-service-id]');
     if (!btn) return;
+    // A completed booking (state.result set) is over: re-entering the
+    // wizard via a service-card deep link must land on a fresh details
+    // form at step 4, not the stale success panel from the last booking.
+    if (state.result) resetState();
     state.serviceId = btn.dataset.serviceId;
     go(2);
   });

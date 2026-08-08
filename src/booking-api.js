@@ -71,6 +71,11 @@ export async function book(payload) {
       body: JSON.stringify(payload),
     });
     if (res.status === 409) return { ok: false, error: 'slot_taken' };
+    // The Worker sends { ok:false, error:"validation", fields:{...} } on 400,
+    // matching validateBooking()'s return shape on the mock path — parse and
+    // return it as-is rather than letting it collapse into the generic
+    // 'network' error below, which would discard the per-field detail.
+    if (res.status === 400) return await res.json();
     if (!res.ok) return { ok: false, error: 'network' };
     return await res.json();
   } catch {

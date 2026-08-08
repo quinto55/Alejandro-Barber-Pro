@@ -20,6 +20,13 @@ export function t(key, vars) {
 
 export function currentLang() { return lang; }
 
+/**
+ * Test-only seam: reassigns the module-private `dict` directly, bypassing
+ * setLang()'s localStorage/document/dynamic-import path (all browser
+ * globals unavailable/unwanted under `node --test`). Not used by app code.
+ */
+export function setDict(newDict) { dict = newDict; }
+
 export function applyTranslations(root = document) {
   for (const el of root.querySelectorAll('[data-i18n]')) {
     el.textContent = t(el.dataset.i18n, JSON.parse(el.dataset.i18nVars || 'null'));
