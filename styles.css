@@ -103,9 +103,9 @@ main { display: block; }
   color: var(--bone);
   text-decoration: none;
 }
-.brand .crown {
-  width: 28px;
-  height: 28px;
+.brand .logo {
+  width: 40px;
+  height: 40px;
   flex: 0 0 auto;
 }
 .brand .wordmark {
