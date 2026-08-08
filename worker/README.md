@@ -66,9 +66,13 @@ until you flip the switch in Step 8.
 
    - `GOOGLE_CLIENT_EMAIL` — the `client_email` from the JSON key (Step 4).
    - `GOOGLE_PRIVATE_KEY` — the `private_key` from the JSON key (Step 4),
-     pasted exactly as it appears in the JSON, including the
-     `-----BEGIN PRIVATE KEY-----` / `-----END PRIVATE KEY-----` lines and
-     `\n` sequences.
+     including the `-----BEGIN PRIVATE KEY-----` / `-----END PRIVATE KEY-----`
+     lines. The recommended way to extract it is
+     `jq -r '.private_key' key.json`, which prints the key with real
+     newlines, ready to paste. If you instead copy the value straight out of
+     the raw JSON text (where newlines appear as the two characters `\n`),
+     that also works — the Worker normalizes both real and literal `\n`
+     newlines before decoding the key.
    - `CALENDAR_ID` — the calendar ID from Step 6.
    - `ALLOWED_ORIGIN` — the exact origin the site is served from (e.g.
      `https://alejandrobarberpro.com`, no trailing slash). This is the only

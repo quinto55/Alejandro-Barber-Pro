@@ -234,6 +234,7 @@ async function importPrivateKey(pem) {
   const contents = pem
     .replace(/-----BEGIN PRIVATE KEY-----/, '')
     .replace(/-----END PRIVATE KEY-----/, '')
+    .replace(/\\n/g, '\n') // handle literal \n escape sequences from a raw-JSON paste
     .replace(/\s+/g, '');
   const der = base64ToArrayBuffer(contents);
   return crypto.subtle.importKey(
