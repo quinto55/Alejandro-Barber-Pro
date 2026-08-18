@@ -163,10 +163,40 @@ async function freeBusyFor(dateStr, token, env) {
   return cal?.busy ?? [];
 }
 
-/** Insert the confirmed event, inviting the client and Alejandro. */
+/**
+ * Everything Alejandro needs to reach the client, in the event body.
+ * This is the ONLY place the client's contact details land, so it has to
+ * carry the phone and email — see insertEvent() for why they can't be an
+ * attendee.
+ */
+function eventDescription(payload, service) {
+  const lines = [
+    `Service: ${service.id} (${service.durationMin} min, from $${service.priceFrom})`,
+    `Name:    ${payload.name}`,
+    `Phone:   ${payload.phone}`,
+    `Email:   ${payload.email}`,
+  ];
+  const notes = payload.notes?.trim();
+  if (notes) lines.push('', `Notes: ${notes}`);
+  lines.push('', 'Booked online at alejandrobarberpro.com');
+  return lines.join('\n');
+}
+
+/**
+ * Insert the confirmed event on Alejandro's calendar.
+ *
+ * The client is deliberately NOT added as an attendee. A service account
+ * without Domain-Wide Delegation cannot invite attendees — Google rejects
+ * the entire insert with 403 forbiddenForServiceAccounts, so attaching one
+ * would fail the whole booking, not merely skip the invite. Domain-Wide
+ * Delegation requires Google Workspace, and this calendar is a consumer
+ * Gmail account. Their details go in the event body instead, and the site's
+ * confirmation copy promises no email. `sendUpdates` is omitted for the
+ * same reason: with no attendees there is nobody to notify.
+ */
 async function insertEvent(payload, service, start, end, token, env) {
   const res = await fetch(
-    `${CALENDAR_API}/calendars/${encodeURIComponent(env.CALENDAR_ID)}/events?sendUpdates=all`,
+    `${CALENDAR_API}/calendars/${encodeURIComponent(env.CALENDAR_ID)}/events`,
     {
       method: 'POST',
       headers: {
@@ -175,10 +205,9 @@ async function insertEvent(payload, service, start, end, token, env) {
       },
       body: JSON.stringify({
         summary: `${service.id} — ${payload.name}`,
-        description: payload.notes || '',
+        description: eventDescription(payload, service),
         start: { dateTime: start.toISOString(), timeZone: 'America/New_York' },
         end: { dateTime: end.toISOString(), timeZone: 'America/New_York' },
-        attendees: [{ email: payload.email, displayName: payload.name }],
       }),
     },
   );

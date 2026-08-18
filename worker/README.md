@@ -101,11 +101,14 @@ until you flip the switch in Step 8.
 10. **Verify one real booking end to end.**
     Load the live site, run through the booking wizard for a real (or
     disposable) date/time, and confirm:
-    - The event appears on Alejandro's Google Calendar.
+    - The event appears on Alejandro's Google Calendar, at the right wall-clock
+      time, with the right duration for the service.
+    - The event description carries the client's name, phone and email.
+      That description is the *only* place those details land — no invite
+      is sent, so if it's missing, Alejandro has no way to reach the client.
     - The client-facing confirmation shows a real `eventId`/start/end (not
-      a `mock-...` id).
-    - The calendar invite email actually arrives for the client email you
-      used.
+      a `mock-...` id), and the on-screen summary shows the correct service,
+      date and time.
     - Booking the same slot a second time returns "slot taken" instead of
       double-booking.
 
@@ -116,6 +119,21 @@ until you flip the switch in Step 8.
 
 ## Notes
 
+- **No calendar invite is sent to the client, by design.** A service account
+  without Domain-Wide Delegation cannot invite attendees: Google rejects the
+  whole event insert with `403 forbiddenForServiceAccounts`, which would fail
+  the entire booking rather than just skip the invite. Domain-Wide Delegation
+  requires Google Workspace, and this calendar is a consumer Gmail account.
+  So `insertEvent` sends no `attendees` and no `sendUpdates`, the client's
+  details go in the event description, and the site's confirmation copy shows
+  the appointment on screen instead of promising an email. If Alejandro ever
+  moves to Workspace, or we add an OAuth-as-Alejandro flow, this can be
+  revisited — see `insertEvent` in `src/worker.js`.
+- **Booksy can still double-book him.** This Worker reads free/busy from
+  Google Calendar only. Any appointment booked through Booksy is invisible to
+  it unless Booksy's Google Calendar sync is switched on and pointed at the
+  same `CALENDAR_ID`. Until then the site can book a client into a slot he is
+  already working. This is a known, accepted risk, not an oversight.
 - All four secrets are read only via `env.*` in `worker/src/worker.js` —
   none are hardcoded anywhere in this repo.
 - The Worker imports `availableSlots` from `../../src/slots.js` and
