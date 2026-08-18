@@ -1,46 +1,30 @@
-import { SERVICES, BOOKING } from './config.js';
-import { getAvailability, book, isMock } from './booking-api.js';
-import { addDays, weekdayOf, nyParts } from './tz.js';
+import { SERVICES } from './config.js';
 import { formatDuration, formatPrice } from './services.js';
-import { t, currentLang } from './i18n.js';
+import { t } from './i18n.js';
+import { mountCal, calUrlFor } from './cal-embed.js';
 
-const state = { step: 1, serviceId: null, date: null, time: null,
-                details: { name: '', email: '', phone: '', notes: '' },
-                slots: [], loading: false, errors: {}, result: null };
-// Not part of the brief's given skeleton, but needed to disable the submit
-// button and show `book.submitting` while a real `book()` call is in flight.
-state.submitting = false;
+// Two steps now, not four. The site owns service selection; Cal.com owns the
+// date/time picker, the details form, confirmation and reminders — so there
+// is no local date, time, details, slots or result to track any more.
+const state = { step: 1, serviceId: null };
 
+// `vip` is selfBookable:false and stays out of the picker, exactly as before.
+// On Cal.com it exists as an event type with "requires confirmation" turned
+// on, so Alejandro approves each one — it is reachable from the VIP note in
+// the visit section, never auto-confirmed here.
 const bookable = () => SERVICES.filter(s => s.selfBookable);
 
 function go(step) { state.step = step; render(); }
 
-async function loadSlots() {
-  state.loading = true; state.time = null; render();
-  try {
-    state.slots = await getAvailability(state.date, state.serviceId);
-  } catch { state.slots = []; state.errors.slots = 'book.error'; }
-  state.loading = false; render();
-}
-
 /**
- * Mutates every field back to its initial value rather than reassigning
- * `state` (it's a module-level `const`, and every closure in this file —
- * the click/keydown handlers built during earlier renders, the deep-link
- * listener — closes over this one object). Reassigning would leave those
- * closures pointing at a stale object.
+ * Mutates in place rather than reassigning `state` (it's a module-level
+ * `const`, and the deep-link listener registered in initWizard() closes over
+ * this one object). Reassigning would leave that closure pointing at a stale
+ * object.
  */
 function resetState() {
   state.step = 1;
   state.serviceId = null;
-  state.date = null;
-  state.time = null;
-  state.details = { name: '', email: '', phone: '', notes: '' };
-  state.slots = [];
-  state.loading = false;
-  state.errors = {};
-  state.result = null;
-  state.submitting = false;
 }
 
 // ---- Step indicator ---------------------------------------------------
@@ -48,7 +32,7 @@ function resetState() {
 function renderStepIndicator() {
   const stepsEl = document.querySelector('#book-steps');
   if (!stepsEl) return;
-  stepsEl.replaceChildren(...[1, 2, 3, 4].map(n => {
+  stepsEl.replaceChildren(...[1, 2].map(n => {
     const li = document.createElement('li');
     li.className = 'book-step';
     if (n === state.step) { li.classList.add('is-current'); li.setAttribute('aria-current', 'step'); }
@@ -89,9 +73,9 @@ function buildNav({ backStep = null, onNext = null, nextDisabled = false } = {})
 // tabindex="0"), Left/Right/Up/Down move focus AND selection together.
 // Note: these options are tagged `data-svc`, deliberately NOT
 // `data-service-id` — that attribute belongs to the service-card CTAs
-// from Task 9 and is what the Step 6 deep-link delegate listener matches
-// on. Reusing it here would make selecting a service radio also trigger
-// the deep-link handler and jump straight to step 2, bypassing Continue.
+// and is what the deep-link delegate listener in initWizard() matches on.
+// Reusing it here would make selecting a service radio also trigger the
+// deep-link handler and jump straight to step 2, bypassing Continue.
 
 function selectService(id) {
   state.serviceId = id;
@@ -157,12 +141,9 @@ function renderStep1() {
 
   panel.append(group);
 
-  // Pattern B (JS-rendered content, per the two-pattern discipline
-  // established since Task 11): this element is owned entirely by
-  // wizard.js's render cycle, so it's built with t() directly rather than
-  // a data-i18n attribute. Placed right where a client is looking at a
-  // bare "$60+" right before committing — exactly where the spec's stated
-  // goal ("no client arrives expecting a fixed price") matters most.
+  // Placed right where a client is looking at a bare "$60+" before
+  // committing — exactly where the spec's stated goal ("no client arrives
+  // expecting a fixed price") matters most.
   const note = document.createElement('p');
   note.className = 'book-note';
   note.textContent = t('services.note');
@@ -172,328 +153,64 @@ function renderStep1() {
   return panel;
 }
 
-// ---- Step 2: date picker ------------------------------------------------
-
-function monthLabel(dateStr) {
-  const [y, m] = dateStr.split('-').map(Number);
-  // Fixed mid-month day, formatted in UTC: sidesteps any DST/timezone edge
-  // case nudging the formatted month backward or forward.
-  const mid = new Date(Date.UTC(y, m - 1, 15));
-  return new Intl.DateTimeFormat(currentLang(), { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(mid);
-}
-
-function chooseDate(d) {
-  if (weekdayOf(d) === 0) return; // Sundays aren't choosable.
-  // Defense-in-depth (see the deep-link delegate in initWizard() below for
-  // the primary fix): a completed booking's result must never survive into
-  // a fresh date/time pick, or step 4 would render the stale success panel
-  // instead of a real details form. Only null the result itself here (not
-  // a full resetState()) — serviceId is already set for the booking in
-  // progress and must not be wiped.
-  state.result = null;
-  state.date = d;
-  state.step = 3;
-  state.errors.submit = null;
-  state.errors.slots = null;
-  loadSlots(); // sets loading + renders itself; no separate go()/render() needed here.
-}
+// ---- Step 2: Cal.com booking -------------------------------------------
 
 function renderStep2() {
   const panel = document.createElement('div');
   panel.className = 'book-step-panel';
 
-  const h3 = document.createElement('h3');
-  h3.textContent = t('book.pickDate');
-  panel.append(h3);
-
-  const today = nyParts(new Date()).date;
-  const dates = Array.from({ length: BOOKING.horizonDays }, (_, i) => addDays(today, i));
-
-  const list = document.createElement('div');
-  list.className = 'date-list';
-
-  let monthKey = null;
-  let grid = null;
-  for (const d of dates) {
-    const key = d.slice(0, 7); // 'YYYY-MM'
-    if (key !== monthKey) {
-      monthKey = key;
-      const heading = document.createElement('h4');
-      heading.className = 'date-month';
-      heading.textContent = monthLabel(d);
-      list.append(heading);
-      grid = document.createElement('div');
-      grid.className = 'date-month-grid';
-      list.append(grid);
-    }
-
-    const isSunday = weekdayOf(d) === 0;
-    const dayNum = Number(d.slice(8, 10));
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'date-btn' + (isSunday ? ' is-disabled' : '') + (state.date === d ? ' is-selected' : '');
-    btn.textContent = String(dayNum);
-    btn.dataset.date = d;
-    btn.setAttribute('aria-label', `${t(`day.${weekdayOf(d)}`)}, ${monthLabel(d)} ${dayNum}`);
-
-    if (isSunday) {
-      btn.disabled = true;
-      btn.title = t('book.closedDay');
-    } else {
-      btn.addEventListener('click', () => chooseDate(d));
-    }
-    grid.append(btn);
-  }
-
-  panel.append(list);
-  panel.append(buildNav({ backStep: 1 }));
-  return panel;
-}
-
-// ---- Step 3: time picker --------------------------------------------
-
-function renderStep3() {
-  const panel = document.createElement('div');
-  panel.className = 'book-step-panel';
-
-  const h3 = document.createElement('h3');
-  h3.textContent = t('book.pickTime');
-  panel.append(h3);
-
-  const bannerKey = state.errors.submit || state.errors.slots;
-  if (bannerKey) {
-    const banner = document.createElement('p');
-    banner.className = 'book-error-banner';
-    banner.setAttribute('role', 'alert');
-    banner.textContent = t(bannerKey);
-    panel.append(banner);
-  }
-
-  if (state.loading) {
-    const p = document.createElement('p');
-    p.className = 'book-status';
-    p.setAttribute('aria-live', 'polite');
-    p.textContent = t('book.loading');
-    panel.append(p);
-  } else if (!state.slots.length) {
-    const p = document.createElement('p');
-    p.className = 'book-status';
-    p.setAttribute('aria-live', 'polite');
-    p.textContent = t('book.noSlots');
-    panel.append(p);
-  } else {
-    const grid = document.createElement('div');
-    grid.className = 'slot-grid';
-    for (const slot of state.slots) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'slot-btn' + (state.time === slot ? ' is-selected' : '');
-      btn.textContent = slot;
-      btn.addEventListener('click', () => {
-        state.time = slot;
-        state.errors.submit = null;
-        go(4);
-      });
-      grid.append(btn);
-    }
-    panel.append(grid);
-  }
-
-  panel.append(buildNav({ backStep: 2 }));
-  return panel;
-}
-
-// ---- Step 4: details, confirmation, success --------------------------
-
-const FIELD_ORDER = ['name', 'email', 'phone', 'notes'];
-
-function buildField(name, type, label, required) {
-  const wrap = document.createElement('div');
-  wrap.className = 'book-field';
-
-  const errId = `book-${name}-error`;
-  const labelEl = document.createElement('label');
-  labelEl.htmlFor = `book-${name}`;
-  labelEl.textContent = required ? `${label} *` : label;
-  wrap.append(labelEl);
-
-  const input = type === 'textarea' ? document.createElement('textarea') : document.createElement('input');
-  if (type !== 'textarea') input.type = type;
-  else input.rows = 3;
-  input.id = `book-${name}`;
-  input.name = name;
-  input.value = state.details[name] || '';
-  input.setAttribute('aria-describedby', errId);
-  if (required) input.required = true;
-
-  const fieldError = state.errors.fields && state.errors.fields[name];
-  if (fieldError) input.setAttribute('aria-invalid', 'true');
-  else input.removeAttribute('aria-invalid');
-
-  // Written into state on every keystroke — not read from the DOM at
-  // submit time — so back-navigation and language switches (which
-  // rebuild this panel from `state.details`) never lose what was typed.
-  input.addEventListener('input', e => { state.details[name] = e.target.value; });
-
-  wrap.append(input);
-
-  const err = document.createElement('p');
-  err.id = errId;
-  err.className = 'book-field-error';
-  if (fieldError) {
-    err.textContent = t(fieldError);
-  } else {
-    err.hidden = true;
-  }
-  wrap.append(err);
-
-  return wrap;
-}
-
-function focusFirstInvalidField(fields) {
-  const first = FIELD_ORDER.find(f => fields[f]);
-  if (!first) return;
-  document.getElementById(`book-${first}`)?.focus();
-}
-
-async function onSubmit(e) {
-  e.preventDefault();
-  state.errors = {};
-  state.submitting = true;
-  render();
-
-  const result = await book({
-    serviceId: state.serviceId,
-    date: state.date,
-    time: state.time,
-    name: state.details.name,
-    email: state.details.email,
-    phone: state.details.phone,
-    notes: state.details.notes,
-  });
-
-  state.submitting = false;
-
-  if (result.ok) {
-    state.result = result;
-    render();
-    return;
-  }
-
-  if (result.error === 'validation') {
-    state.errors = { fields: result.fields };
-    render();
-    focusFirstInvalidField(result.fields);
-    return;
-  }
-
-  if (result.error === 'slot_taken') {
-    state.errors = { submit: 'book.taken' };
-    state.time = null;
-    state.step = 3;
-    render();
-    loadSlots();
-    return;
-  }
-
-  // 'network', or anything else the API seam might return.
-  state.errors = { submit: 'book.error' };
-  render();
-}
-
-function renderSuccess(panel) {
-  const h3 = document.createElement('h3');
-  h3.textContent = t('book.successTitle');
-  panel.append(h3);
-
-  const body = document.createElement('p');
-  body.textContent = t('book.successBody', { email: state.details.email });
-  panel.append(body);
-
-  const startOver = document.createElement('button');
-  startOver.type = 'button';
-  startOver.className = 'btn';
-  startOver.textContent = t('book.startOver');
-  startOver.addEventListener('click', () => { resetState(); render(); });
-  panel.append(startOver);
-
-  return panel;
-}
-
-function renderStep4() {
-  const panel = document.createElement('div');
-  panel.className = 'book-step-panel';
-
-  // The demo must never look like it created a real appointment — the
-  // notice stays visible through submission and into the success view
-  // below, since isMock() doesn't change once a booking completes.
-  if (isMock()) {
-    const notice = document.createElement('p');
-    notice.className = 'book-mock-notice';
-    notice.textContent = t('book.mockNotice');
-    panel.append(notice);
-  }
-
-  if (state.result && state.result.ok) return renderSuccess(panel);
-
-  const h3 = document.createElement('h3');
-  h3.textContent = t('book.confirm');
-  panel.append(h3);
-
   const service = SERVICES.find(s => s.id === state.serviceId);
-  const summary = document.createElement('p');
-  summary.className = 'book-summary';
-  summary.textContent = t('book.summary', {
-    service: service ? t(`svc.${service.id}.name`) : '',
-    date: state.date || '',
-    time: state.time || '',
-  });
-  panel.append(summary);
-
-  if (state.errors.submit) {
-    const banner = document.createElement('p');
-    banner.className = 'book-error-banner';
-    banner.setAttribute('role', 'alert');
-    banner.textContent = t(state.errors.submit);
-    panel.append(banner);
+  // Reachable if a deep link carried an id that is no longer a real service.
+  // Falling back to step 1 beats mounting an embed for a nonexistent slug.
+  if (!service) {
+    resetState();
+    return renderStep1();
   }
 
-  const form = document.createElement('form');
-  form.className = 'book-form';
-  form.noValidate = true;
-  form.append(
-    buildField('name', 'text', t('book.name'), true),
-    buildField('email', 'email', t('book.email'), true),
-    buildField('phone', 'tel', t('book.phone'), true),
-    buildField('notes', 'textarea', t('book.notes'), false),
-  );
+  const h3 = document.createElement('h3');
+  h3.textContent = t(`svc.${service.id}.name`);
+  panel.append(h3);
 
-  const nav = document.createElement('div');
-  nav.className = 'book-nav';
-  const back = document.createElement('button');
-  back.type = 'button';
-  back.className = 'btn btn-ghost';
-  back.textContent = t('book.back');
-  back.addEventListener('click', () => go(3));
-  nav.append(back);
+  const meta = document.createElement('p');
+  meta.className = 'book-cal-meta';
+  meta.textContent = `${formatPrice(service)} · ${formatDuration(service.durationMin)}`;
+  panel.append(meta);
 
-  const submit = document.createElement('button');
-  submit.type = 'submit';
-  submit.className = 'btn';
-  submit.disabled = state.submitting;
-  submit.textContent = state.submitting ? t('book.submitting') : t('book.confirm');
-  nav.append(submit);
+  // The embed replaces this container's contents once Cal's script lands.
+  // Until then (and forever, if the script is blocked) the placeholder text
+  // and the fallback link below are what the client sees.
+  const host = document.createElement('div');
+  host.className = 'book-cal-host';
+  host.textContent = t('book.calLoading');
+  panel.append(host);
 
-  form.append(nav);
-  form.addEventListener('submit', onSubmit);
+  const fallback = document.createElement('p');
+  fallback.className = 'book-cal-fallback';
+  const link = document.createElement('a');
+  link.href = calUrlFor(service.id);
+  link.target = '_blank';
+  link.rel = 'noopener';
+  link.textContent = t('book.calFallback');
+  fallback.append(link);
+  panel.append(fallback);
 
-  panel.append(form);
+  panel.append(buildNav({ backStep: 1 }));
+
+  // Mount after the panel is in the document: Cal measures its container, so
+  // mounting a detached node gives it nothing to size against. render()
+  // appends synchronously, so a microtask is enough.
+  queueMicrotask(() => {
+    if (!host.isConnected) return;
+    host.textContent = '';
+    mountCal(host, service.id);
+  });
+
   return panel;
 }
 
 // ---- Top-level render ---------------------------------------------------
 
-const PANELS = { 1: renderStep1, 2: renderStep2, 3: renderStep3, 4: renderStep4 };
+const PANELS = { 1: renderStep1, 2: renderStep2 };
 
 function render() {
   renderStepIndicator();
@@ -503,7 +220,7 @@ function render() {
   container.replaceChildren(build());
 }
 
-// ---- Init + deep link (Step 6, brief's given code, verbatim) ---------
+// ---- Init + deep link ---------------------------------------------------
 
 export function initWizard() {
   const preset = new URLSearchParams(location.search).get('service');
@@ -512,10 +229,6 @@ export function initWizard() {
   document.addEventListener('click', e => {
     const btn = e.target.closest('[data-service-id]');
     if (!btn) return;
-    // A completed booking (state.result set) is over: re-entering the
-    // wizard via a service-card deep link must land on a fresh details
-    // form at step 4, not the stale success panel from the last booking.
-    if (state.result) resetState();
     state.serviceId = btn.dataset.serviceId;
     go(2);
   });
@@ -526,5 +239,5 @@ export function initWizard() {
 // Re-translates the currently visible step without touching `state` or
 // registering anything new — called on 'abp:langchange' (see app.js),
 // never `initWizard()` again, which would double up the click listener
-// above.
+// above. Re-rendering step 2 remounts the embed in the new language.
 export { render };

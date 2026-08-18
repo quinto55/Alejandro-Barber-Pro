@@ -842,6 +842,26 @@ main > section + section { border-top: 1px solid var(--ink-3); }
 }
 .book-field-error[hidden] { display: none; }
 
+/* ---- Step 2: Cal.com embed ---- */
+.book-cal-meta {
+  margin: 0 0 var(--s3);
+  color: var(--gold);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* Cal injects its own iframe here and manages the height itself; the
+   min-height only stops the panel collapsing while the script loads. */
+.book-cal-host {
+  min-height: 32rem;
+  color: var(--bone-dim);
+}
+.book-cal-host iframe { width: 100%; border: 0; }
+
+.book-cal-fallback { margin: var(--s2) 0 0; font-size: .9rem; }
+.book-cal-fallback a { color: var(--bone-dim); }
+.book-cal-fallback a:hover { color: var(--gold); }
+
 /* ---- Footer ---- */
 .site-footer {
   background: var(--ink-2);

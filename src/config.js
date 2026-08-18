@@ -32,14 +32,24 @@ export const HOURS = {
 
 // Display names and descriptions live in i18n/, not here.
 // `plus` renders the trailing "+" on from-prices.
+// `calSlug` is the event-type slug on Cal.com. It is NOT derivable from `id`:
+// Alejandro named the event types himself and Cal generated the slugs from
+// those titles, so four of the six diverge. Verified against his live profile
+// on 2026-08-18 — re-check before changing any of them.
 export const SERVICES = [
-  { id: 'haircut',       priceFrom: 60,  plus: true,  durationMin: 55,  selfBookable: true },
-  { id: 'haircut-beard', priceFrom: 85,  plus: true,  durationMin: 80,  selfBookable: true },
-  { id: 'kids',          priceFrom: 60,  plus: true,  durationMin: 50,  selfBookable: true },
-  { id: 'platinum',      priceFrom: 275, plus: true,  durationMin: 175, selfBookable: true },
-  { id: 'color',         priceFrom: 355, plus: true,  durationMin: 200, selfBookable: true },
+  { id: 'haircut',       priceFrom: 60,  plus: true,  durationMin: 55,  selfBookable: true,
+    calSlug: 'haircut' },
+  { id: 'haircut-beard', priceFrom: 85,  plus: true,  durationMin: 80,  selfBookable: true,
+    calSlug: 'haircut-beard' },
+  { id: 'kids',          priceFrom: 60,  plus: true,  durationMin: 50,  selfBookable: true,
+    calSlug: 'kids-haircut-ages-6-12' },
+  { id: 'platinum',      priceFrom: 275, plus: true,  durationMin: 175, selfBookable: true,
+    calSlug: 'platinum-highlights' },
+  { id: 'color',         priceFrom: 355, plus: true,  durationMin: 200, selfBookable: true,
+    calSlug: 'platinum-colour-and-hydration' },
   // Sundays need his approval first — the site must never auto-confirm one.
-  { id: 'vip',           priceFrom: 150, plus: false, durationMin: 65,  selfBookable: false },
+  { id: 'vip',           priceFrom: 150, plus: false, durationMin: 65,  selfBookable: false,
+    calSlug: 'sunday-after-hours-vip' },
 ];
 
 export const BOOKING = { stepMin: 15, leadTimeMin: 120, horizonDays: 60 };
@@ -58,6 +68,23 @@ export const REVIEWS = [
 export const PORTFOLIO_COUNT = 32;
 export const PORTFOLIO_INITIAL = 12;
 
-// Flip to false once the Worker in worker/ is deployed. Nothing else changes.
+// Cal.com owns scheduling: availability, the date/time picker, the details
+// form, confirmations, reminders and rescheduling. The site owns service
+// selection (step 1) and hands off from there.
+//
+// An event type must exist at cal.com/<username>/<calSlug> for every service
+// (see calSlug on SERVICES above). `vip` has Cal's "requires confirmation"
+// turned on so it can never auto-confirm — verified live on 2026-08-18.
+export const CAL = {
+  username: 'alejandrobarberpro',
+  brandColor: '#c8a45c', // keep in step with --gold in styles.css
+  theme: 'dark',
+  layout: 'month_view',
+};
+
+// LEGACY — the self-hosted booking engine (slots.js availability math,
+// booking-api.js, mock-busy.js and the Worker in worker/) is no longer wired
+// into the wizard; Cal.com replaced it. The modules and their tests are kept
+// until a real Cal.com booking has been verified end to end, then removed.
 export const USE_MOCK = true;
 export const API_BASE = 'https://abp-booking.example.workers.dev';

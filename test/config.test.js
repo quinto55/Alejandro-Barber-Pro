@@ -37,3 +37,24 @@ test('booking constants match the spec', () => {
   assert.equal(BUSINESS.timezone, 'America/New_York');
   assert.equal(BUSINESS.reviewCount, 147);
 });
+
+// Every service hands off to a Cal.com event type. A missing or malformed
+// slug is invisible in the UI — the wizard renders normally and the client
+// hits a 404 inside the embed — so it is asserted here instead.
+test('every service carries a Cal.com slug matching his live event types', () => {
+  const expected = {
+    'haircut': 'haircut',
+    'haircut-beard': 'haircut-beard',
+    'kids': 'kids-haircut-ages-6-12',
+    'platinum': 'platinum-highlights',
+    'color': 'platinum-colour-and-hydration',
+    'vip': 'sunday-after-hours-vip',
+  };
+  assert.deepEqual(
+    Object.fromEntries(SERVICES.map(s => [s.id, s.calSlug])),
+    expected,
+  );
+  for (const s of SERVICES) {
+    assert.match(s.calSlug, /^[a-z0-9-]+$/, `${s.id} slug is not URL-safe`);
+  }
+});
