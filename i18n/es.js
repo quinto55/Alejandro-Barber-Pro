@@ -51,6 +51,8 @@ export default {
 
   'about.title': 'Sobre Alejandro',
   'about.body': 'Alejandro es un barbero venezolano que trabaja en Phoenix Salon Suites, en Long Island City. Se especializa en taper fades y trabajo detallado de barba, y atiende a clientes de color y mechas platinadas con cita previa. Ciento cuarenta y siete reseñas después, su calificación no se ha movido de las cinco estrellas.',
+  'about.portraitAlt': 'Alejandro, barbero y dueño de Alejandro Barber Pro',
+  'about.studioAlt': 'La suite de Alejandro: sillón de barbero, espejo retroiluminado y estación de herramientas',
   'about.amenities': 'En el local',
   'about.amenity.cards': 'Se aceptan tarjetas de crédito',
   'about.amenity.accessible': 'Acceso para silla de ruedas',

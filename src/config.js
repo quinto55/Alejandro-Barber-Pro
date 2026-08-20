@@ -77,7 +77,7 @@ export const PORTFOLIO_INITIAL = 12;
 // turned on so it can never auto-confirm — verified live on 2026-08-18.
 export const CAL = {
   username: 'alejandrobarberpro',
-  brandColor: '#c8a45c', // keep in step with --gold in styles.css
+  brandColor: '#c8b8a9', // keep in step with --glow in styles.css
   theme: 'dark',
   layout: 'month_view',
 };

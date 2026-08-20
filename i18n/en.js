@@ -51,6 +51,8 @@ export default {
 
   'about.title': 'About Alejandro',
   'about.body': 'Alejandro is a Venezuelan barber working out of Phoenix Salon Suites in Long Island City. He specialises in taper fades and detailed beard work, and takes colour and platinum clients by appointment. One hundred and forty seven reviews later, his rating has not moved off five stars.',
+  'about.portraitAlt': 'Alejandro, barber and owner of Alejandro Barber Pro',
+  'about.studioAlt': 'Alejandro’s suite: barber chair, backlit mirror and tool station',
   'about.amenities': 'At the shop',
   'about.amenity.cards': 'Credit cards accepted',
   'about.amenity.accessible': 'Wheelchair accessible',

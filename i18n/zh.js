@@ -51,6 +51,8 @@ export default {
 
   'about.title': '关于Alejandro',
   'about.body': 'Alejandro是一位委内瑞拉理发师，在长岛市的Phoenix Salon Suites工作。他专精于锥形渐变发型和精细的胡须造型，并接受预约染色和铂金挑染服务。历经147条评价，他的评分始终保持五星满分。',
+  'about.portraitAlt': 'Alejandro，Alejandro Barber Pro 的理发师兼店主',
+  'about.studioAlt': 'Alejandro 的工作室：理发椅、背光镜子和工具台',
   'about.amenities': '店内设施',
   'about.amenity.cards': '接受信用卡',
   'about.amenity.accessible': '轮椅无障碍通道',
@@ -123,6 +125,7 @@ export default {
     needsNativeReview: [
       'hero.title', 'hero.sub', 'about.body', 'services.note',
       'svc.vip.desc', 'visit.vipNote', 'book.successBody', 'book.mockNotice',
+      'about.portraitAlt', 'about.studioAlt',
     ],
   },
 };

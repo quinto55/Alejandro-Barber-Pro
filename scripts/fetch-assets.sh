@@ -5,13 +5,22 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 CDN="https://d2zdpiztbgorvt.cloudfront.net/region1/us/1114924"
-LOGO="$CDN/logo/1cb19e2a7c0044eaaae241228b07f1-a-l-e-j-a-n-d-r-o-b-a-r-b-e-r--logo-3b13416b3ee94685a7788248111b05-booksy.jpeg"
+# Alejandro's own staff portrait and a photo of his suite, both from the same
+# Booksy profile. Raw sources only — scripts/make-photos.py crops and resizes
+# them into the assets the page actually loads.
+PORTRAIT="$CDN/resource_photos/db922e13c41c440a9810829bc5e603fd.jpeg"
+STUDIO="$CDN/biz_photo/09a611a0a25640e7a78eb40319be85-a-l-e-j-a-n-d-r-o-b-a-r-b-e-r--biz-photo-390e1b32017a4179bb6621dae4c812-booksy.jpeg"
 
 mkdir -p assets/portfolio
 
-if [ ! -f assets/logo-src.jpg ]; then
-  curl -fsS -o assets/logo-src.jpg.part "$LOGO"
-  mv assets/logo-src.jpg.part assets/logo-src.jpg
+if [ ! -f assets/portrait-src.jpg ]; then
+  curl -fsS -o assets/portrait-src.jpg.part "$PORTRAIT"
+  mv assets/portrait-src.jpg.part assets/portrait-src.jpg
+fi
+
+if [ ! -f assets/studio-src.jpg ]; then
+  curl -fsS -o assets/studio-src.jpg.part "$STUDIO"
+  mv assets/studio-src.jpg.part assets/studio-src.jpg
 fi
 
 n=0
@@ -24,5 +33,6 @@ while read -r id; do
   mv "$out.part" "$out"
 done < scripts/ids.txt
 
-echo "logo: $([ -f assets/logo-src.jpg ] && echo ok || echo MISSING)"
+echo "portrait: $([ -f assets/portrait-src.jpg ] && echo ok || echo MISSING)"
+echo "studio:   $([ -f assets/studio-src.jpg ] && echo ok || echo MISSING)"
 echo "photos: $(ls assets/portfolio/*.jpg 2>/dev/null | wc -l)/32"
