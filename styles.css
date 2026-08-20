@@ -8,6 +8,7 @@
      that everything flattens into one wash. Hierarchy comes from weight,
      scale and space instead. */
   --glow: #c8b8a9; --glow-soft: #e6dbcf; --concrete: #6e6862;
+  --glow-rgb: 200 184 169;  /* --glow as channels, for the light washes */
   --bone: #f2efe9; --bone-dim: #a7a29a; --danger: #d9534f;
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -283,7 +284,7 @@ main { display: block; }
 }
 .hero-inner {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   max-width: 46rem;
 }
 .hero-logo {
@@ -986,4 +987,79 @@ main > section + section { border-top: 1px solid var(--ink-3); }
   color: var(--bone-dim);
   font-size: .8rem;
   text-align: center;
+}
+
+
+/* ---- Ambient light + motion --------------------------------------------
+   The logo render is backlit: the mark sits in a warm halo on the wall.
+   These rules bring that light onto the page. No new hue — every wash is
+   --glow, used as light rather than as ink.
+
+   Everything here degrades in two directions. Without JS nothing is ever
+   given .reveal, so no content can be left hidden by a script that failed.
+   Under prefers-reduced-motion the drift stops and reveals resolve to their
+   settled state, so the page is static but complete. */
+
+/* Hero halo. Sits above the photo (z-index 1) and below the copy (z-index 2)
+   so it reads as light in the room rather than a tint on the image. */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: -15% -10% auto -10%;
+  height: 130%;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(42% 52% at 30% 40%,
+              rgb(var(--glow-rgb) / .16), rgb(var(--glow-rgb) / 0) 70%);
+  animation: glow-drift 50s ease-in-out infinite alternate;
+}
+@keyframes glow-drift {
+  from { transform: translate3d(-2%, -1%, 0) scale(1); }
+  to   { transform: translate3d(3%, 2%, 0) scale(1.09); }
+}
+
+/* Section bloom: light falling into the top of each band. Deliberately near
+   the threshold of perception — you should feel the page is lit, not spot
+   the gradient. The hero is excluded; it has its own halo above. */
+section:not(.hero) { position: relative; }
+section:not(.hero)::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 22rem;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(58% 100% at 50% 0%,
+              rgb(var(--glow-rgb) / .06), rgb(var(--glow-rgb) / 0) 72%);
+}
+section:not(.hero) > .wrap { position: relative; z-index: 1; }
+
+/* Scroll reveal. .reveal is applied by src/reveal.js and only ever by it —
+   see the module for why that matters. */
+.reveal { opacity: 0; transform: translateY(10px); }
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity .45s ease, transform .45s cubic-bezier(.2, .7, .3, 1);
+}
+
+/* Hover: a 2px lift is enough to feel responsive without bouncing. */
+.service-card { transition: transform .2s ease, border-color .2s ease; }
+.service-card:hover { transform: translateY(-2px); border-color: var(--glow); }
+.shot { transition: transform .25s ease, box-shadow .25s ease; }
+.shot:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(0 0 0 / .45); }
+
+/* Nav separates from the content once you leave the hero. */
+.site-header { transition: background .25s ease, backdrop-filter .25s ease; }
+.site-header.is-scrolled {
+  background: rgb(14 14 16 / .82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before { animation: none; }
+  /* Belt and braces: reveal.js already declines to hide anything under this
+     setting, but if it ever did, this keeps the content readable. */
+  .reveal { opacity: 1; transform: none; }
 }

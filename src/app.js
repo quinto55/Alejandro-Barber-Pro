@@ -7,6 +7,7 @@ import { renderServices } from './services.js';
 import { initPortfolio } from './portfolio.js';
 import { renderReviews, renderHours, renderAddress } from './visit.js';
 import { initWizard, render as renderWizard } from './wizard.js';
+import { initReveal } from './reveal.js';
 
 function populateFooterSocialLinks() {
   const links = {
@@ -148,6 +149,13 @@ async function init() {
   // any listener.
   initWizard();
   document.addEventListener('abp:langchange', renderWizard);
+
+  // Last: every section above is now in the DOM, so the first reveal pass
+  // sees real content. It runs after the awaited initI18n() either way, but
+  // ordering it here keeps that dependency obvious rather than incidental.
+  // Anything rendered later (language switch, "Show more") is picked up by
+  // the MutationObserver inside initReveal().
+  initReveal();
 }
 
 if (document.readyState === 'loading') {
