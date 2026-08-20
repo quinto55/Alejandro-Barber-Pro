@@ -75,6 +75,8 @@ export default {
   'reviews.ibbz': 'I came from the UK and needed a last minute trim he got me so niceee probably the best barber I have ever been to can highly recommend him',
   'reviews.yuvraj': 'Kind and talented barber, got me very fresh and got me exactly what I wanted in the reference photo I showed. He even offered snacks or drinks which is really nice.',
   'reviews.tomas': 'Perfect haircut, he does exactly what you ask for and he’s so detail oriented. From Romania',
+  'reviews.anon': 'El mejor barbero que e conocido hasta ahora y que hace súper que bien su trabajo, con una muy buena atención simplemente el mejor y excelente 😙 recomendado',
+  'reviews.anonName': 'Anónimo',
 
   'visit.title': 'Visítanos',
   'visit.hours': 'Horario',

@@ -68,6 +68,9 @@ export const REVIEWS = [
   { name: 'Ibbz',     textKey: 'reviews.ibbz' },
   { name: 'Yuvraj',   textKey: 'reviews.yuvraj' },
   { name: 'Tomas',    textKey: 'reviews.tomas' },
+  // The name row was cropped out of the source screenshot, so this one
+  // is attributed anonymously rather than guessed.
+  { nameKey: 'reviews.anonName', textKey: 'reviews.anon' },
 ];
 
 export const PORTFOLIO_COUNT = 32;

@@ -623,23 +623,33 @@ main { display: block; }
 }
 .review-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-  /* start, not stretch: a one-word quote gets a one-word box instead of
-     being stranded in a card sized for a paragraph. */
-  align-items: start;
+  /* Wider columns than the 14rem this started at: with every card locked to
+     the same height, the longest quote sets that height for all of them, and
+     a wider column costs the longest quote lines. */
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  /* 1fr rows + stretch: every card is the same size, whatever the quote
+     length. The trade is real — a one-word quote gets a card sized for the
+     longest one — and it is deliberate, for a uniform grid. */
+  grid-auto-rows: 1fr;
+  align-items: stretch;
   gap: var(--s2);
   margin: var(--s4) 0 0;
   padding: 0;
   list-style: none;
 }
 .review {
+  /* Column flex so the attribution pins to the bottom edge of every card,
+     giving the grid one consistent baseline instead of names floating at
+     whatever height each quote happens to end. */
+  display: flex;
+  flex-direction: column;
   padding: var(--s2) var(--s3);
   background: var(--ink-2);
   border: 1px solid var(--ink-3);
   border-radius: 4px;
 }
 .review-text {
-  margin: 0;
+  margin: 0 0 var(--s2);
   color: var(--bone);
   font-size: 1rem;
   line-height: 1.5;
@@ -647,7 +657,8 @@ main { display: block; }
 .review-text::before { content: '“'; }
 .review-text::after { content: '”'; }
 .review-name {
-  margin: var(--s1) 0 0;
+  margin: var(--s2) 0 0;
+  margin-top: auto;
   color: var(--glow);
   font-size: .85rem;
   font-weight: 600;

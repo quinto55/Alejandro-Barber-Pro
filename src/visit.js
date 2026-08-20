@@ -11,8 +11,12 @@ export function renderReviews() {
   document.querySelector('#review-list').replaceChildren(...REVIEWS.map(r => {
     const li = document.createElement('li');
     li.className = 'review';
+    // `nameKey` for a name that is a word rather than a proper noun
+    // ("Anonymous"), so it follows the language toggle; `name` otherwise,
+    // since a person's name is not translated.
+    const name = r.nameKey ? t(r.nameKey) : r.name;
     li.innerHTML = `<p class="review-text">${t(r.textKey)}</p>
-                    <p class="review-name">${r.name}</p>`;
+                    <p class="review-name">${name}</p>`;
     return li;
   }));
 }
