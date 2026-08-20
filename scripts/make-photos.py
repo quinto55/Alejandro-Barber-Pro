@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """Turn the raw Booksy sources into the two photos the About section loads.
 
-Sources come from scripts/fetch-assets.sh (portrait-src.jpg, studio-src.jpg)
-and are gitignored; only the derived files below are committed.
+The studio source comes from scripts/fetch-assets.sh and is gitignored. The
+portrait source (assets/portrait-src.png) was supplied directly and IS
+committed, so this crop stays reproducible.
 
-  assets/alejandro.jpg  his staff portrait, square, 720px
+  assets/alejandro.jpg  his portrait, cropped 4:5 from the top of the frame.
+                        The source is a full-length street shot, so a
+                        centred square crop lands on his waist — the crop is
+                        anchored to the top instead. Never upscaled: the
+                        source is 604px wide and staying there beats
+                        inventing pixels.
   assets/studio.jpg     his suite. The source has a stray leg and sneaker in
                         the foreground, so the bottom STUDIO_CUT px are
                         dropped before resizing — everything that matters
@@ -18,17 +24,15 @@ from PIL import Image
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-STUDIO_CUT = 560   # px of foreground to drop off the bottom of the source
-PORTRAIT_PX = 720
+STUDIO_CUT = 560     # px of foreground to drop off the bottom of the source
+PORTRAIT_RATIO = 5 / 4   # height / width — a standing editorial portrait
 STUDIO_PX = 1400
 QUALITY = 82
 
-portrait = Image.open(ROOT / "assets/portrait-src.jpg").convert("RGB")
-side = min(portrait.size)
-left = (portrait.size[0] - side) // 2
-top = (portrait.size[1] - side) // 2
-portrait = portrait.crop((left, top, left + side, top + side))
-portrait = portrait.resize((PORTRAIT_PX, PORTRAIT_PX), Image.LANCZOS)
+portrait = Image.open(ROOT / "assets/portrait-src.png").convert("RGB")
+pw, ph = portrait.size
+crop_h = min(ph, round(pw * PORTRAIT_RATIO))
+portrait = portrait.crop((0, 0, pw, crop_h))
 portrait.save(ROOT / "assets/alejandro.jpg", quality=QUALITY, optimize=True)
 
 studio = Image.open(ROOT / "assets/studio-src.jpg").convert("RGB")
