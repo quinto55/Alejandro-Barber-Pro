@@ -70,6 +70,11 @@ export default {
   'reviews.anthony': 'Great experience, would definitely come again.',
   'reviews.alex': 'Amazing work',
   'reviews.khan': 'Excellent',
+  'reviews.johan': 'Loved the haircut!! And Alejandro is a very welcoming person. 10/10 Definitely coming here again 💯',
+  'reviews.maks': 'Place looks amazing, great service and is really nice, and the haircut is great, i’ve never gotten a good haircut in the past and was so happy from how good this one was. Thank you very much.',
+  'reviews.ibbz': 'I came from the UK and needed a last minute trim he got me so niceee probably the best barber I have ever been to can highly recommend him',
+  'reviews.yuvraj': 'Kind and talented barber, got me very fresh and got me exactly what I wanted in the reference photo I showed. He even offered snacks or drinks which is really nice.',
+  'reviews.tomas': 'Perfect haircut, he does exactly what you ask for and he’s so detail oriented. From Romania',
 
   'visit.title': 'Visit',
   'visit.hours': 'Hours',

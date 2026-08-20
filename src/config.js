@@ -63,6 +63,11 @@ export const REVIEWS = [
   { name: 'Anthony',  textKey: 'reviews.anthony' },
   { name: 'Alex',     textKey: 'reviews.alex' },
   { name: 'Khan',     textKey: 'reviews.khan' },
+  { name: 'Johan',    textKey: 'reviews.johan' },
+  { name: 'Maks',     textKey: 'reviews.maks' },
+  { name: 'Ibbz',     textKey: 'reviews.ibbz' },
+  { name: 'Yuvraj',   textKey: 'reviews.yuvraj' },
+  { name: 'Tomas',    textKey: 'reviews.tomas' },
 ];
 
 export const PORTFOLIO_COUNT = 32;

@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import en from '../i18n/en.js';
+import { REVIEWS } from '../src/config.js';
 import es from '../i18n/es.js';
 import zh from '../i18n/zh.js';
 
@@ -27,7 +28,9 @@ test('no value is empty', () => {
 });
 
 test('review text is verbatim and identical across languages', () => {
-  const reviewKeys = ['reviews.julio', 'reviews.erick', 'reviews.leonardo', 'reviews.anthony', 'reviews.alex', 'reviews.khan'];
+  // Derived from REVIEWS, not hardcoded: a hardcoded list silently stops
+  // covering every review added after it was written.
+  const reviewKeys = REVIEWS.map(r => r.textKey);
   assert.ok(reviewKeys.length >= 6);
   for (const k of reviewKeys) {
     assert.equal(es[k], en[k], `${k} must not be translated`);

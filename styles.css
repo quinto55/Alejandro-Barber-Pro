@@ -285,7 +285,24 @@ main { display: block; }
 .hero-inner {
   position: relative;
   z-index: 2;
-  max-width: 46rem;
+}
+.hero-copy { max-width: 46rem; }
+
+/* At desktop widths the lockup moves out of the copy stack and sits beside
+   it, vertically centred. That is what lets the mark stay large enough for
+   its lettering to read while the CTA stays above the fold — stacked, the
+   215px lockup pushed the button off a 665px viewport. Below 1024px it
+   stacks above the copy, where the width budget is tighter and the
+   lettering is smaller but the fold is not under the same pressure. */
+@media (min-width: 1024px) {
+  .hero-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--s5);
+  }
+  .hero-logo { grid-column: 2; grid-row: 1; margin-bottom: 0; }
+  .hero-copy { grid-column: 1; grid-row: 1; }
 }
 /* The hero carries the full supplied lockup — crown, monogram and the
    "- ALEJANDRO BARBER PRO -" lettering. That lettering is only ~3.5% of the
@@ -295,8 +312,11 @@ main { display: block; }
    tall and uses the mark alone. */
 .hero-logo {
   display: block;
-  width: 260px;
-  height: 215px;
+  /* Fluid rather than fixed: the lockup must not overflow a 375px phone,
+     and aspect-ratio keeps the mask undistorted at every width. */
+  width: min(280px, 66vw);
+  aspect-ratio: 478 / 396;
+  height: auto;
   margin-bottom: var(--s2);
   -webkit-mask-image: url(assets/lockup-mask.png);
   mask-image: url(assets/lockup-mask.png);
