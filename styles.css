@@ -287,11 +287,19 @@ main { display: block; }
   z-index: 2;
   max-width: 46rem;
 }
+/* The hero carries the full supplied lockup — crown, monogram and the
+   "- ALEJANDRO BARBER PRO -" lettering. That lettering is only ~3.5% of the
+   lockup's height, so it needs ~273px of width before it resolves into
+   words rather than a grey rule; 260px is the practical floor. This is the
+   only slot on the page with room for it — see .brand .logo, which is 40px
+   tall and uses the mark alone. */
 .hero-logo {
   display: block;
-  width: 64px;
-  height: 50px;
+  width: 260px;
+  height: 215px;
   margin-bottom: var(--s2);
+  -webkit-mask-image: url(assets/lockup-mask.png);
+  mask-image: url(assets/lockup-mask.png);
 }
 .eyebrow {
   margin: 0 0 var(--s2);

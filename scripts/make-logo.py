@@ -8,12 +8,16 @@ heavily blurred copy of itself flattens that gradient first, so "ink vs wall"
 is judged locally, and only then is the threshold applied.
 
 Outputs, all white-on-transparent so CSS can tint them to any colour:
-  logo-mask.png   crown + ABp monogram. The wordmark baked into the source is
-                  deliberately dropped: it renders at 40-56px on the page,
-                  where it is illegible, and the markup already prints
-                  "Alejandro Barber Pro" as live text beside the mark.
-  crown-mask.png  crown only, for the favicon and tight spots.
-  favicon.png     crown tinted with --glow, 180x180.
+  logo-mask.png    crown + ABp monogram, for the nav and footer.
+  lockup-mask.png  the FULL lockup as supplied: crown, monogram, and the
+                   "- ALEJANDRO BARBER PRO -" lettering beneath it. Used in
+                   the hero, where there is room to render the lettering
+                   large enough to read. Note the proportions: the lettering
+                   is only ~3.5% of the lockup's height, so it needs roughly
+                   280px of width before it resolves into words rather than
+                   a grey rule. Do not drop it into a 40px nav slot.
+  crown-mask.png   crown only, for the favicon and tight spots.
+  favicon.png      crown tinted with --glow, 180x180.
 """
 from PIL import Image, ImageFilter
 import numpy as np
@@ -77,6 +81,10 @@ crown_bottom = b[1][1] if len(b) >= 4 else b[0][1]
 logo = crop(crown_top, mark_bottom)
 logo.save(ROOT / "assets/logo-mask.png")
 
+# Full lockup: everything from the crown's finial through the wordmark.
+lockup = crop(crown_top, b[-1][1])
+lockup.save(ROOT / "assets/lockup-mask.png")
+
 crown = crop(crown_top, crown_bottom)
 crown.save(ROOT / "assets/crown-mask.png")
 
@@ -86,5 +94,8 @@ tint = Image.new("RGBA", crown.size, GLOW + (255,))
 fav.paste(tint, ((side - crown.size[0]) // 2, (side - crown.size[1]) // 2), crown.split()[-1])
 fav.resize((180, 180), Image.LANCZOS).save(ROOT / "assets/favicon.png")
 
+wordmark_frac = (b[-1][1] - b[-1][0]) / (b[-1][1] - crown_top)
 print("bands", b)
-print("logo-mask", logo.size, "crown-mask", crown.size, "favicon 180x180")
+print("logo-mask", logo.size, "lockup-mask", lockup.size, "crown-mask", crown.size)
+print(f"wordmark is {wordmark_frac:.1%} of lockup height "
+      f"-> needs ~{round(8 / wordmark_frac * lockup.size[0] / lockup.size[1])}px width for 8px lettering")
