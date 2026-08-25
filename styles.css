@@ -734,6 +734,27 @@ main { display: block; }
   height: 100%;
   border: 0;
 }
+/* Stands in for the map until asked for. Sized by .map's aspect-ratio, so
+   swapping in the iframe causes no layout shift. */
+.map-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s1);
+  width: 100%;
+  height: 100%;
+  padding: var(--s3);
+  background: var(--ink-2);
+  border: 0;
+  color: var(--bone);
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: background .2s ease;
+}
+.map-placeholder:hover { background: var(--ink-3); }
+.map-placeholder-label { font-weight: 600; }
+.map-placeholder-note { color: var(--bone-dim); font-size: .85rem; }
 
 /* Visual separation between the shell's section shells. */
 main > section + section { border-top: 1px solid var(--ink-3); }
@@ -1102,3 +1123,31 @@ section:not(.hero) > .wrap { position: relative; z-index: 1; }
      setting, but if it ever did, this keeps the content readable. */
   .reveal { opacity: 1; transform: none; }
 }
+
+
+/* ---- Legal pages (privacy.html) ---- */
+.legal { padding-top: var(--s5); }
+.legal h1 { font-size: clamp(2.5rem, 6vw, 4rem); }
+.legal h2 {
+  margin: var(--s5) 0 var(--s2);
+  font-size: 1.5rem;
+}
+.legal p {
+  max-width: 42rem;
+  color: var(--bone-dim);
+  font-size: 1.05rem;
+}
+.legal-updated {
+  margin: var(--s2) 0 0;
+  color: var(--concrete);
+  font-size: .85rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.legal-lede { margin: var(--s4) 0 0; color: var(--bone) !important; }
+.legal-back { margin-top: var(--s5); }
+.legal-back a { color: var(--glow); }
+
+.footer-legal { margin: var(--s3) 0 0; font-size: .9rem; }
+.footer-legal a { color: var(--bone-dim); text-decoration: none; }
+.footer-legal a:hover { color: var(--glow); }

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="privacy.metaTitle">Privacy — Alejandro Barber Pro</title>
+  <meta name="description" content="What this site stores and what it does not." data-i18n-attr="content:privacy.metaDesc">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" href="assets/favicon.png">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/cormorant-garamond-600.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400.woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="a11y.skip">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html">
+        <span class="logo" aria-hidden="true"></span>
+        <span class="wordmark">Alejandro Barber Pro</span>
+      </a>
+      <div class="nav-actions">
+        <select id="lang-select" class="lang-select" aria-label="Language" data-i18n-attr="aria-label:lang.label">
+          <option value="en">English</option>
+          <option value="es">Español</option>
+          <option value="zh">中文</option>
+        </select>
+        <a class="btn" href="index.html#book" data-i18n="nav.book">Book</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="legal">
+      <div class="wrap">
+        <h1 data-i18n="privacy.title">Privacy</h1>
+        <p class="legal-updated" data-i18n="privacy.updated">Last updated 25 August 2026</p>
+
+        <p class="legal-lede" data-i18n="privacy.lede">This site does not track you. There is no analytics, no advertising, no third-party tracking, and this site sets no cookies of its own. Nothing you do here is sold or shared with advertisers.</p>
+
+        <h2 data-i18n="privacy.storedTitle">What is stored on your device</h2>
+        <p data-i18n="privacy.storedBody">One thing: the language you choose from the toggle, so the site is still in that language when you come back. It is kept in your browser and never sent anywhere. Clearing your browser's site data removes it.</p>
+
+        <h2 data-i18n="privacy.mapTitle">The map</h2>
+        <p data-i18n="privacy.mapBody">The map on the Visit page is loaded from Google Maps, and only when you press the button to show it. Until you do, nothing is requested from Google and Google cannot see that you were here. Once you press it, Google receives your IP address and may set its own cookies, under Google's privacy policy rather than this one.</p>
+
+        <h2 data-i18n="privacy.bookingTitle">Booking an appointment</h2>
+        <p data-i18n="privacy.bookingBody">Booking is handled by Cal.com, which loads only after you choose a service. The name, email address and phone number you enter go to Cal.com and the appointment is added to Alejandro's calendar. They are used to hold and confirm your appointment and for nothing else. Cal.com's own privacy policy covers how they handle it.</p>
+
+        <h2 data-i18n="privacy.linksTitle">Links to other sites</h2>
+        <p data-i18n="privacy.linksBody">The Instagram, Facebook and TikTok links in the footer are ordinary links. Nothing is sent to those companies unless you click through, and once you do, their policies apply, not this one.</p>
+
+        <h2 data-i18n="privacy.contactTitle">Questions</h2>
+        <p data-i18n="privacy.contactBody">Message Alejandro on Instagram and he will answer.</p>
+
+        <p class="legal-back"><a href="index.html" data-i18n="privacy.back">Back to the site</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="logo" aria-hidden="true"></span>
+          <span class="wordmark">Alejandro Barber Pro</span>
+        </div>
+      </div>
+      <p class="footer-legal"><a href="privacy.html" data-i18n="footer.privacy">Privacy</a></p>
+      <p id="footer-copyright" class="footer-copyright" data-i18n="footer.rights" data-i18n-vars='{"year":"2026"}'></p>
+    </div>
+  </footer>
+
+  <script type="module" src="src/legal.js"></script>
+</body>
+</html>

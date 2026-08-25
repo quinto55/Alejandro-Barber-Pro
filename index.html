@@ -167,15 +167,15 @@
             <h3 data-i18n="visit.address">Address</h3>
             <div id="address" class="address"></div>
             <a id="directions" class="btn btn-ghost directions-link" href="#"></a>
+            <!-- Click-to-load: the Google iframe is created only when this
+                 button is pressed, so no request reaches Google, and no
+                 Google cookie can be set, unless a visitor asks for the map.
+                 See /privacy.html. -->
             <div class="map">
-              <iframe
-                id="visit-map"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                data-i18n-attr="title:visit.mapTitle"
-                title="Map to Alejandro Barber Pro"
-                tabindex="-1"
-              ></iframe>
+              <button type="button" id="map-load" class="map-placeholder">
+                <span class="map-placeholder-label" data-i18n="visit.mapLoad">Show the map</span>
+                <span class="map-placeholder-note" data-i18n="visit.mapNote">Loads from Google Maps</span>
+              </button>
             </div>
           </div>
         </div>
@@ -207,6 +207,7 @@
           </ul>
         </div>
       </div>
+      <p class="footer-legal"><a href="privacy.html" data-i18n="footer.privacy">Privacy</a></p>
       <p class="footer-copyright" id="footer-copyright" data-i18n="footer.rights">© 2026 Alejandro Barber Pro</p>
     </div>
   </footer>

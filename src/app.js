@@ -2,7 +2,7 @@
 // mobile nav, and the trilingual runtime. Later tasks (hero/services,
 // portfolio, visit, booking wizard) add their own imports and init calls here.
 import { BUSINESS } from './config.js';
-import { initI18n, setLang, currentLang } from './i18n.js';
+import { initI18n, setLang, currentLang, t } from './i18n.js';
 import { renderServices } from './services.js';
 import { initPortfolio } from './portfolio.js';
 import { renderReviews, renderHours, renderAddress } from './visit.js';
@@ -83,9 +83,24 @@ function setupLangSelect() {
 // change with language, so — unlike renderReviews()/renderHours()/
 // renderAddress() below — it's set once here rather than re-run on
 // 'abp:langchange'.
-function setMapEmbedSrc() {
-  const iframe = document.getElementById('visit-map');
-  if (iframe) iframe.src = `https://www.google.com/maps?q=${encodeURIComponent(BUSINESS.mapQuery)}&output=embed`;
+/**
+ * Wire the map placeholder. The Google iframe is not in the markup and is
+ * not created until the visitor clicks: until then this site makes no
+ * third-party request at all, so Google never sees their IP address and
+ * cannot set a cookie. That is the whole reason the map is behind a button
+ * rather than a lazy iframe — see /privacy.html, which says so.
+ */
+function setupMapOnDemand() {
+  const button = document.getElementById('map-load');
+  if (!button) return;
+  button.addEventListener('click', () => {
+    const iframe = document.createElement('iframe');
+    iframe.id = 'visit-map';
+    iframe.referrerPolicy = 'no-referrer-when-downgrade';
+    iframe.title = t('visit.mapTitle');
+    iframe.src = `https://www.google.com/maps?q=${encodeURIComponent(BUSINESS.mapQuery)}&output=embed`;
+    button.replaceWith(iframe);
+  }, { once: true });
 }
 
 async function init() {
@@ -97,7 +112,7 @@ async function init() {
   populateFooterSocialLinks();
   setFooterCopyrightYear();
   setHeroRatingVars();
-  setMapEmbedSrc();
+  setupMapOnDemand();
   setupHamburger();
   // Smooth-scrolling for in-page nav anchors is handled declaratively via
   // `scroll-behavior: smooth` in styles.css — no duplicate JS scroll handler.

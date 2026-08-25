@@ -74,9 +74,13 @@ test('extractHtmlKeys sanity check: reads data-i18n and data-i18n-attr, not data
   assert.deepEqual([...got].sort(), ['footer.rights', 'meta.description', 'nav.toggle', 'services.title']);
 });
 
-test('every i18n key referenced in index.html or src/*.js exists in i18n/en.js', () => {
-  const html = readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-  const used = extractHtmlKeys(html);
+test('every i18n key referenced in any page or src/*.js exists in i18n/en.js', () => {
+  // Every .html at the repo root, not just index.html: privacy.html carries
+  // its own keys, and scanning one page silently leaves the others unchecked.
+  const used = new Set();
+  for (const file of readdirSync(ROOT).filter(f => f.endsWith('.html'))) {
+    for (const k of extractHtmlKeys(readFileSync(path.join(ROOT, file), 'utf8'))) used.add(k);
+  }
 
   const srcDir = path.join(ROOT, 'src');
   for (const file of readdirSync(srcDir).filter(f => f.endsWith('.js'))) {
