@@ -1,12 +1,18 @@
 // Verified against his live Booksy profile on 2026-08-01.
 // See docs/superpowers/specs/2026-08-01-alejandro-barber-pro-design.md
 // Do not change any value here without re-verifying against source.
+//
+// EXCEPTION, 2026-08-30: the suite number moved from #158 to #131 (same
+// building, same floor), reported directly by the owner. The 2026-08-01 spec
+// and plan still record #158 — they are dated records of that build and were
+// deliberately left alone, so treat this file, not the spec, as current for
+// the address.
 
 export const BUSINESS = {
   name: 'Alejandro Barber Pro',
   addressLines: [
     '30-30 Northern Blvd',
-    'Phoenix Salon Suites, 1st Floor, Suite #158',
+    'Phoenix Salon Suites, 1st Floor, Suite #131',
     'Long Island City, NY 11101',
   ],
   mapQuery: '30-30 Northern Blvd, Long Island City, NY 11101',
