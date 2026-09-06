@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Scan to book — Alejandro Barber Pro</title>
+<style>
+/* Letter-size sign for the suite door or the front desk.
+   Print at 100% / "Actual size" — any "fit to page" shrink is fine for the
+   QR (it is vector) but will nudge the margins. */
+@page { size: letter; margin: 0; }
+
+@font-face {
+  font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 600;
+  src: url('../assets/fonts/cormorant-garamond-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter'; font-style: normal; font-weight: 400;
+  src: url('../assets/fonts/inter-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter'; font-style: normal; font-weight: 600;
+  src: url('../assets/fonts/inter-600.woff2') format('woff2');
+}
+
+:root {
+  --ink: #0e0e10;
+  /* The site's --glow (#c8b8a9) is a backlight on near-black. On white paper
+     it reads as barely-there grey, so print gets a darkened sibling that
+     actually holds contrast under a fluorescent tube. */
+  --copper: #7d6a56;
+  --copper-hair: #c8b8a9;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; background: #fff; }
+
+.sheet {
+  width: 8.5in;
+  height: 11in;
+  margin: 0 auto;
+  padding: 0.9in 0.8in 0.75in;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--ink);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* The crown is a white-on-transparent alpha mask (see scripts/make-logo.py),
+   so it is tinted here rather than recoloured in an image editor. */
+.crown {
+  width: 1.15in;
+  height: 1.15in;
+  background: var(--copper);
+  -webkit-mask: url('../assets/crown-mask.png') center / contain no-repeat;
+  mask: url('../assets/crown-mask.png') center / contain no-repeat;
+}
+
+.name {
+  margin: .18in 0 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  font-size: 34pt;
+  line-height: 1.05;
+  letter-spacing: .01em;
+}
+
+.rule {
+  width: 1.6in;
+  height: 1px;
+  margin: .22in 0 .3in;
+  background: var(--copper-hair);
+}
+
+.qr {
+  width: 4.1in;
+  height: 4.1in;
+  display: block;
+}
+
+/* Three languages because his clients are three languages — the site ships
+   EN/ES/ZH and a sign that only speaks one of them is a smaller sign.
+   Spanish leads: it is the language he and most of his regulars use. */
+.prompt {
+  margin: .34in 0 0;
+  font-size: 17pt;
+  font-weight: 600;
+  line-height: 1.75;
+}
+.prompt span { display: block; }
+.prompt .zh {
+  font-family: 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC',
+               'Hiragino Sans GB', 'Source Han Sans SC', sans-serif;
+}
+
+.url {
+  margin-top: auto;
+  padding-top: .3in;
+  font-size: 15pt;
+  font-weight: 600;
+  color: var(--copper);
+  letter-spacing: .01em;
+}
+
+.where {
+  margin-top: .12in;
+  font-size: 10.5pt;
+  color: #6e6862;
+}
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="crown" role="img" aria-label="Alejandro Barber Pro crown"></div>
+    <h1 class="name">Alejandro Barber Pro</h1>
+    <div class="rule"></div>
+
+    <img class="qr" src="../assets/qr.svg" alt="QR code to alejandrobarberpro.com">
+
+    <p class="prompt">
+      <span>Escanea para reservar</span>
+      <span>Scan to book</span>
+      <span class="zh">扫码预约</span>
+    </p>
+
+    <p class="url">alejandrobarberpro.com</p>
+    <p class="where">Phenix Salon Suites · 30-30 Northern Blvd · Suite #131</p>
+  </div>
+</body>
+</html>
