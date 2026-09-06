@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test test/",
+    "check:cal": "node scripts/check-cal-fields.mjs",
     "serve": "python3 -m http.server 8080"
   }
 }

@@ -89,6 +89,18 @@ export const PORTFOLIO_INITIAL = 12;
 // An event type must exist at cal.com/<username>/<calSlug> for every service
 // (see calSlug on SERVICES above). `vip` has Cal's "requires confirmation"
 // turned on so it can never auto-confirm — verified live on 2026-08-18.
+//
+// INTAKE FIELDS are Cal's too, set per event type, and nothing here can
+// override them: the embed can prefill a field but cannot reveal one Cal is
+// hiding. As of 2026-09-06 all six ask for name + email only —
+// `attendeePhoneNumber` exists on every event type but is hidden and
+// optional, so no phone number is being collected. Turning it on is six
+// manual toggles in Alejandro's dashboard: docs/cal-booking-questions.md.
+// Run `npm run check:cal` to read the live state back off all six.
+//
+// NOTE: privacy.html already tells visitors a phone number is collected. That
+// sentence is accurate only once those toggles are on — it is a claim in a
+// privacy notice, so keep the two in step.
 export const CAL = {
   username: 'alejandrobarberpro',
   brandColor: '#c8b8a9', // keep in step with --glow in styles.css
