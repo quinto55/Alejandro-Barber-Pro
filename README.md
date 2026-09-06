@@ -1,7 +1,7 @@
 # Alejandro Barber Pro
 
 A trilingual (English / Spanish / Chinese) marketing and booking site for
-Alejandro Barber Pro — NYC Taper Fade Specialist, located at Phoenix Salon
+Alejandro Barber Pro — NYC Taper Fade Specialist, located at Phenix Salon
 Suites, Long Island City, Queens. Vanilla HTML/CSS/JS, no build step, no
 framework.
 

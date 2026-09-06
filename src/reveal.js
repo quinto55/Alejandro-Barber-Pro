@@ -20,6 +20,7 @@ const TARGETS = [
   '#about .shop-grid',
   '#reviews .review',
   '#visit .visit-grid > *',
+  '#visit .arrive',
 ].join(', ');
 
 const STAGGER_MS = 60;

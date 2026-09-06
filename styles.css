@@ -567,7 +567,7 @@ main { display: block; }
 /* His suite, beside the amenity list it describes. */
 .shop-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
   gap: var(--s4);
   align-items: center;
   margin-top: var(--s3);
@@ -575,8 +575,59 @@ main { display: block; }
 .shop-photo {
   width: 100%;
   height: auto;
+  /* Portrait since 2026-09-06: his own photo of the room replaced the
+     landlord's landscape one. Pinned here so the reflow is identical
+     before and after the JPEG loads. */
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
   border-radius: 2px;
   border: 1px solid var(--concrete);
+}
+
+/* Arrival sequence — the three photos under Visit. Not decoration: the
+   building holds dozens of identical rented suites behind one unmarked
+   entrance, so this is the part of the page that stops a client circling
+   a corridor. Numbered through a counter rather than <ol>'s own markers,
+   which sit outside the photo and read as a list of captions instead of
+   a sequence of steps. */
+.arrive {
+  margin-top: var(--s5);
+}
+.arrive h3 {
+  font-size: 1.3rem;
+  margin-bottom: var(--s2);
+}
+.arrive-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--s3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: arrive;
+}
+.arrive-step {
+  counter-increment: arrive;
+}
+.arrive-photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 2px;
+  border: 1px solid var(--concrete);
+}
+.arrive-step p {
+  margin: var(--s2) 0 0;
+  font-size: .95rem;
+  color: var(--bone-dim);
+}
+.arrive-step p::before {
+  content: counter(arrive) ".";
+  margin-right: .4em;
+  color: var(--glow);
+  font-family: var(--font-display);
+  font-size: 1.15em;
 }
 
 @media (max-width: 768px) {

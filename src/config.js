@@ -7,12 +7,18 @@
 // and plan still record #158 — they are dated records of that build and were
 // deliberately left alone, so treat this file, not the spec, as current for
 // the address.
+//
+// EXCEPTION, 2026-09-06: the landlord is "Phenix Salon Suites", not "Phoenix".
+// It had been misspelled here and in all three translations since the first
+// build — the 2026-08-01 spec carries the typo too, and the signage in
+// assets/arrive-2-phenix-src.png is what settles it. Phenix is a national
+// franchise brand and that is simply how it is spelled.
 
 export const BUSINESS = {
   name: 'Alejandro Barber Pro',
   addressLines: [
     '30-30 Northern Blvd',
-    'Phoenix Salon Suites, 1st Floor, Suite #131',
+    'Phenix Salon Suites, 1st Floor, Suite #131',
     'Long Island City, NY 11101',
   ],
   mapQuery: '30-30 Northern Blvd, Long Island City, NY 11101',
