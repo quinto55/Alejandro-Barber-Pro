@@ -16,10 +16,14 @@
 
 export const BUSINESS = {
   name: 'Alejandro Barber Pro',
+  // Three display lines, given in this exact shape by the owner on
+  // 2026-09-06: street and suite together, then city, then ZIP with no
+  // state. Display only — `mapQuery` below is what Google is actually
+  // handed, and it keeps the NY so the lookup stays unambiguous.
   addressLines: [
-    '30-30 Northern Blvd',
-    'Phenix Salon Suites, 1st Floor, Suite #131',
-    'Long Island City, NY 11101',
+    '30-30 Northern Blvd, Phenix Salon Suites, 1st Floor, Suite #131',
+    'Long Island City',
+    '11101',
   ],
   mapQuery: '30-30 Northern Blvd, Long Island City, NY 11101',
   instagram: 'https://www.instagram.com/alejandrobarberpro/',
