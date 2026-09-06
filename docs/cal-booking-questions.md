@@ -1,6 +1,7 @@
 # Turning on the phone number at booking
 
-**For Alejandro.** Takes about five minutes. You need to do it six times —
+**For Alejandro.** Spanish version: `cal-booking-questions.es.md` — that
+is the one to actually send him. Takes about five minutes. You need to do it six times —
 once per service — because Cal.com stores the booking form separately for
 each one.
 
