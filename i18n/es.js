@@ -110,8 +110,6 @@ export default {
   'day.6': 'Sábado',
 
   'book.title': 'Reservar una cita',
-  'book.step1': 'Servicio',
-  'book.step2': 'Fecha y hora',
   'book.step.service': 'Servicio',
   'book.step.addons': 'Complementos',
   'book.step.cal': 'Fecha y hora',

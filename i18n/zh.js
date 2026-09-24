@@ -110,8 +110,6 @@ export default {
   'day.6': '星期六',
 
   'book.title': '预约',
-  'book.step1': '服务',
-  'book.step2': '日期与时间',
   'book.step.service': '服务',
   'book.step.addons': '附加服务',
   'book.step.cal': '日期与时间',

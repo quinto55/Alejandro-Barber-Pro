@@ -110,8 +110,6 @@ export default {
   'day.6': 'Saturday',
 
   'book.title': 'Book an appointment',
-  'book.step1': 'Service',
-  'book.step2': 'Date & time',
   'book.step.service': 'Service',
   'book.step.addons': 'Add-ons',
   'book.step.cal': 'Date & time',

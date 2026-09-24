@@ -879,6 +879,57 @@ main > section + section { border-top: 1px solid var(--ink-3); }
 .service-radio-price { color: var(--bone); font-weight: 600; font-size: 1.1rem; }
 .service-radio-dur { color: var(--bone-dim); font-size: .85rem; white-space: nowrap; }
 
+/* Add-ons step: checklist + running total */
+.addon-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.addon-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--s2) var(--s3);
+  padding: var(--s2) var(--s3);
+  background: var(--ink-2);
+  border: 1px solid var(--ink-3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color .15s ease;
+}
+.addon-row:hover { border-color: var(--glow-soft); }
+.addon-row.is-selected {
+  border-color: var(--glow);
+  box-shadow: inset 0 0 0 1px var(--glow);
+}
+.addon-check {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0;
+  accent-color: var(--glow);
+  cursor: pointer;
+}
+.addon-check:focus-visible { outline: 2px solid var(--glow); outline-offset: 2px; }
+.addon-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.addon-name { color: var(--bone); font-weight: 600; }
+.addon-desc { color: var(--bone-dim); font-size: .85rem; }
+.addon-plus { color: var(--bone-dim); font-size: .85rem; }
+.addon-price { color: var(--bone); font-weight: 600; font-size: 1.1rem; white-space: nowrap; }
+.book-total {
+  margin: var(--s3) 0 0;
+  color: var(--glow);
+  font-weight: 600;
+}
+
+/* Cal step: the add-ons that were chosen, under the price/length line */
+.book-cal-addons {
+  margin: 0 0 var(--s3);
+  padding: 0;
+  list-style: none;
+  color: var(--bone-dim);
+  font-size: .9rem;
+}
+
 /* Step 2: date list */
 .date-list { display: flex; flex-direction: column; gap: var(--s2); }
 .date-month {
