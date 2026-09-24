@@ -30,7 +30,7 @@ http://localhost:8080.
 npm test
 ```
 
-Runs the Node built-in test runner (`node --test test/`) over the pure
+Runs the Node built-in test runner (`node --test "test/*.test.js"`) over the pure
 logic modules (slot math, timezone conversion, i18n, config, the booking
 API's mock and validation paths). No browser or network required.
 
