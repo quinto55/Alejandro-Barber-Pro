@@ -44,6 +44,10 @@ API's mock and validation paths). No browser or network required.
   - `config.js` — business data, hours, services, pricing, booking rules,
     and the `USE_MOCK` / `API_BASE` switch that controls demo vs. live
     booking.
+  - `addons.js` — the add-on math: prices, true minutes, and the length
+    Cal.com will actually block (rounded up to Cal's fixed duration menu).
+  - `flow.js` — which steps a booking has (two, or three with add-ons) and
+    the wizard's state transitions, kept DOM-free so they are unit-tested.
   - `i18n.js` — trilingual runtime (reads `i18n/*.js`, applies
     `data-i18n` attributes, handles language switching).
   - `tz.js` — all America/New_York timezone conversion; no other module
@@ -71,9 +75,13 @@ API's mock and validation paths). No browser or network required.
   Written and syntax-checked, **not deployed**. See `worker/README.md`
   before running any of it.
 - **`test/`** — Node test-runner specs for the pure logic in `src/`.
-- **`scripts/`** — one-off asset-prep scripts (logo generation, asset
-  fetching), not part of the runtime site.
-- **`docs/`** — project planning docs (specs, task briefs) for this build.
+- **`scripts/`** — not part of the runtime site. `check-cal-fields.mjs`
+  (`npm run check:cal`) reads Alejandro's live Cal.com event types and
+  reports whether the phone field and the add-on duration lists are set up;
+  the rest are one-off asset-prep scripts (logo generation, QR code).
+- **`docs/`** — specs and plans under `superpowers/`, plus step-by-step
+  instructions for Alejandro's Cal.com dashboard (`cal-booking-questions`,
+  `cal-multiple-durations`; the `.es.md` twins are the ones to send him).
 
 ## Connecting real booking
 
