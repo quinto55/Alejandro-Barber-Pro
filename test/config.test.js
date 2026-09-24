@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { HOURS, SERVICES, BOOKING, BUSINESS } from '../src/config.js';
+import { HOURS, SERVICES, BOOKING, BUSINESS, ADDONS, ADDON_NOTE_PREFIX, ADDONS_LIVE, CAL_DURATION_MENU } from '../src/config.js';
 
 test('hours match the verified Booksy schedule', () => {
   assert.equal(HOURS[0], null, 'Sunday is closed');
@@ -57,4 +57,49 @@ test('every service carries a Cal.com slug matching his live event types', () =>
   for (const s of SERVICES) {
     assert.match(s.calSlug, /^[a-z0-9-]+$/, `${s.id} slug is not URL-safe`);
   }
+});
+
+// ---- Add-ons (spec: docs/superpowers/specs/2026-09-23-add-ons-design.md) ----
+
+test('add-ons match his Booksy sheet of 2026-09-23', () => {
+  assert.deepEqual(
+    ADDONS.map(a => [a.id, a.price, a.min]),
+    [
+      ['design',   20, 10],
+      ['eyebrows', 10, 5],
+      ['wash',     15, 10],
+      ['facial',   65, 20],
+    ],
+  );
+  for (const a of ADDONS) {
+    assert.ok(typeof a.note === 'string' && a.note.trim().length > 0, `${a.id} has no calendar note`);
+  }
+  assert.equal(ADDONS.find(a => a.id === 'facial').descKey, 'addon.facial.desc');
+  assert.equal(ADDONS.filter(a => a.descKey).length, 1, 'only the facial has a description on Booksy');
+  assert.equal(ADDON_NOTE_PREFIX, 'Add-ons / Complementos');
+});
+
+test('add-ons are offered on the three haircut services only', () => {
+  const all = ADDONS.map(a => a.id);
+  assert.deepEqual(
+    Object.fromEntries(SERVICES.map(s => [s.id, s.addons])),
+    {
+      'haircut': all,
+      'haircut-beard': all,
+      'kids': all,
+      'platinum': [],
+      'color': [],
+      'vip': [],
+    },
+  );
+});
+
+test("Cal's duration menu is pinned and the launch gate is a boolean", () => {
+  // Read from calcom/cal.com@main on 2026-09-23:
+  // apps/web/modules/event-types/components/tabs/setup/EventSetupTab.tsx
+  assert.deepEqual(CAL_DURATION_MENU, [
+    5, 10, 15, 20, 25, 30, 40, 45, 50, 60, 75, 80, 90, 120, 150, 180, 240,
+    300, 360, 420, 480,
+  ]);
+  assert.equal(typeof ADDONS_LIVE, 'boolean');
 });

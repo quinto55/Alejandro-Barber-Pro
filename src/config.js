@@ -52,20 +52,28 @@ export const HOURS = {
 // Alejandro named the event types himself and Cal generated the slugs from
 // those titles, so four of the six diverge. Verified against his live profile
 // on 2026-08-18 — re-check before changing any of them.
+// Which add-ons a service offers (ids from ADDONS below). The three haircuts
+// offer all four. Platinum and colour offer none — deliberately: Cal's
+// duration menu (CAL_DURATION_MENU) has no 200, so turning this on for
+// colour would book 240 minutes for every colour client even with nothing
+// added, and platinum with one add-on would jump from 175 to 240. VIP is
+// never self-booked. See the 2026-09-23 spec, §3.2.
+const HAIRCUT_ADDONS = ['design', 'eyebrows', 'wash', 'facial'];
+
 export const SERVICES = [
   { id: 'haircut',       priceFrom: 60,  plus: true,  durationMin: 55,  selfBookable: true,
-    calSlug: 'haircut' },
+    calSlug: 'haircut',                        addons: HAIRCUT_ADDONS },
   { id: 'haircut-beard', priceFrom: 85,  plus: true,  durationMin: 80,  selfBookable: true,
-    calSlug: 'haircut-beard' },
+    calSlug: 'haircut-beard',                  addons: HAIRCUT_ADDONS },
   { id: 'kids',          priceFrom: 60,  plus: true,  durationMin: 50,  selfBookable: true,
-    calSlug: 'kids-haircut-ages-6-12' },
+    calSlug: 'kids-haircut-ages-6-12',         addons: HAIRCUT_ADDONS },
   { id: 'platinum',      priceFrom: 275, plus: true,  durationMin: 175, selfBookable: true,
-    calSlug: 'platinum-highlights' },
+    calSlug: 'platinum-highlights',            addons: [] },
   { id: 'color',         priceFrom: 355, plus: true,  durationMin: 200, selfBookable: true,
-    calSlug: 'platinum-colour-and-hydration' },
+    calSlug: 'platinum-colour-and-hydration',  addons: [] },
   // Sundays need his approval first — the site must never auto-confirm one.
   { id: 'vip',           priceFrom: 150, plus: false, durationMin: 65,  selfBookable: false,
-    calSlug: 'sunday-after-hours-vip' },
+    calSlug: 'sunday-after-hours-vip',         addons: [] },
 ];
 
 export const BOOKING = { stepMin: 15, leadTimeMin: 120, horizonDays: 60 };
@@ -91,6 +99,42 @@ export const REVIEWS = [
 
 export const PORTFOLIO_COUNT = 32;
 export const PORTFOLIO_INITIAL = 12;
+
+// ---- Add-ons ------------------------------------------------------------
+// Design: docs/superpowers/specs/2026-09-23-add-ons-design.md
+
+// Cal.com's dashboard only lets an event type offer lengths from this fixed
+// menu (apps/web/modules/event-types/components/tabs/setup/EventSetupTab.tsx,
+// `multipleDurationOptions`, read from calcom/cal.com@main on 2026-09-23).
+// The site rounds every appointment UP to the next value here — never down —
+// so Alejandro may lose a few minutes on some combinations but can never be
+// double-booked. If Cal ever changes the menu, `npm run check:cal` shows his
+// live lists disagreeing with ours before it bites a booking.
+export const CAL_DURATION_MENU = [
+  5, 10, 15, 20, 25, 30, 40, 45, 50, 60, 75, 80, 90, 120, 150, 180, 240,
+  300, 360, 420, 480,
+];
+
+// From his Booksy add-on sheet, screenshot of 2026-09-23. Fixed prices, not
+// from-prices. Display names and the facial's description live in i18n/ as
+// `addon.<id>.name` / `addon.<id>.desc`; `descKey` is set only where Booksy
+// shows a description. `note` is what Alejandro reads on his own calendar,
+// so it is bilingual on purpose and does not follow the client's language.
+export const ADDONS = [
+  { id: 'design',   price: 20, min: 10, note: 'Design / Diseño' },
+  { id: 'eyebrows', price: 10, min: 5,  note: 'Eyebrows / Cejas' },
+  { id: 'wash',     price: 15, min: 10, note: 'Hair wash / Lavado de cabello' },
+  { id: 'facial',   price: 65, min: 20, note: 'Facial', descKey: 'addon.facial.desc' },
+];
+export const ADDON_NOTE_PREFIX = 'Add-ons / Complementos';
+
+// LAUNCH GATE. While false the wizard has no add-ons step and hands Cal no
+// duration — exactly the site as it was before this feature. Flip to true
+// ONLY once `npm run check:cal` reports every add-on service carrying the
+// duration lists in docs/cal-multiple-durations.md. Before that Cal would
+// silently ignore the duration and book the base length under a client who
+// believes they added a facial.
+export const ADDONS_LIVE = false;
 
 // Cal.com owns scheduling: availability, the date/time picker, the details
 // form, confirmations, reminders and rescheduling. The site owns service
