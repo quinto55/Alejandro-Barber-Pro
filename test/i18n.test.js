@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import en from '../i18n/en.js';
-import { REVIEWS } from '../src/config.js';
+import { REVIEWS, ADDONS } from '../src/config.js';
 import es from '../i18n/es.js';
 import zh from '../i18n/zh.js';
 
@@ -55,4 +55,23 @@ test('Chinese declares which strings still need native review', () => {
   for (const k of zh._meta.needsNativeReview) {
     assert.ok(k in en, `${k} in needsNativeReview is not a real key`);
   }
+});
+
+// The wizard builds these keys with template literals, which
+// test/i18n-usage.test.js cannot see — so they are pinned here instead.
+test('every add-on has a name in every language, and a description only where config says so', () => {
+  for (const a of ADDONS) {
+    for (const [lang, d] of Object.entries(dicts)) {
+      assert.equal(typeof d[`addon.${a.id}.name`], 'string', `${lang} lacks addon.${a.id}.name`);
+    }
+    if (a.descKey) assert.ok(a.descKey in en, `${a.descKey} is not a real key`);
+  }
+});
+
+test('the wizard step labels exist for every step key', () => {
+  for (const key of ['service', 'addons', 'cal']) {
+    assert.ok(`book.step.${key}` in en, `book.step.${key} missing`);
+  }
+  assert.ok('services.hoursOnly' in en);
+  assert.match(en['book.addonPlus'], /\{n\}/);
 });
