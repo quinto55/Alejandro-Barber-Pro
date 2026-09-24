@@ -196,6 +196,9 @@ function renderAddonsStep() {
 
   const total = document.createElement('p');
   total.className = 'book-total';
+  // Rewritten on every toggle; announce it, or a screen-reader user hears
+  // "Facial, checked" and never the new price and length.
+  total.setAttribute('aria-live', 'polite');
 
   const list = document.createElement('div');
   list.className = 'addon-list';
