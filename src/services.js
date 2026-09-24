@@ -2,14 +2,19 @@ import { SERVICES, BUSINESS } from './config.js';
 import { t } from './i18n.js';
 
 export function formatDuration(min) {
-  return min < 60
-    ? t('services.minutes', { n: min })
-    : t('services.hours', { h: Math.floor(min / 60), m: min % 60 });
+  if (min < 60) return t('services.minutes', { n: min });
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return m === 0 ? t('services.hoursOnly', { h }) : t('services.hours', { h, m });
 }
 
-/** Preserves the "+" on from-prices. $60 and $60+ mean different things. */
-export function formatPrice(s) {
-  return `$${s.priceFrom}${s.plus ? '+' : ''}`;
+/**
+ * Preserves the "+" on from-prices. $60 and $60+ mean different things.
+ * Takes anything shaped { priceFrom, plus }: a service record, or a total
+ * from addons.js.
+ */
+export function formatPrice({ priceFrom, plus }) {
+  return `$${priceFrom}${plus ? '+' : ''}`;
 }
 
 export function renderServices() {
