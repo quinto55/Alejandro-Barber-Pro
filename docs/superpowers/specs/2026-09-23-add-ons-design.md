@@ -1,7 +1,7 @@
 # Alejandro Barber Pro — Add-ons at Booking (Design Spec)
 
 **Date:** 2026-09-23
-**Status:** Draft, awaiting Anthony's review
+**Status:** Approved 2026-09-23
 **Repo:** `quinto55/Alejandro-Barber-Pro` (local: `~/projects/Alejandro-Barber-Pro`)
 **Builds on:** `2026-08-01-alejandro-barber-pro-design.md` (the site) and the
 2026-08-18 hand-off of scheduling to Cal.com (`src/cal-embed.js`).
