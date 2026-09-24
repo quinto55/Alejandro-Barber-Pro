@@ -6,6 +6,10 @@
 // date/time picker, the details form, confirmation email, reminders and
 // client-side rescheduling. None of that is reimplemented here.
 //
+// Since 2026-09 the site also hands Cal a `duration` (the length the
+// calendar must block, from addons.js) and a `notes` line naming the
+// add-ons. See docs/superpowers/specs/2026-09-23-add-ons-design.md, §7.
+//
 // The embed is third-party and loads over the network, so every path in this
 // module assumes it might not arrive: see mountCal()'s fallback link.
 
@@ -63,9 +67,24 @@ export function calLinkFor(serviceId) {
   return `${CAL.username}/${service?.calSlug ?? serviceId}`;
 }
 
+/**
+ * Query params for the booking page. Both are Cal's own prefill params:
+ * `duration` is honoured only when the event type offers that length (that
+ * is what docs/cal-multiple-durations.md sets up, and why ADDONS_LIVE
+ * exists); `notes` prefills the notes field the client sees. Falsy values
+ * are left out so a call with no add-ons is indistinguishable from before.
+ */
+function calParams({ duration, notes } = {}) {
+  const p = new URLSearchParams();
+  if (duration) p.set('duration', String(duration));
+  if (notes) p.set('notes', notes);
+  return p;
+}
+
 /** The public booking URL, used for the no-JS / embed-blocked fallback. */
-export function calUrlFor(serviceId) {
-  return `https://cal.com/${calLinkFor(serviceId)}`;
+export function calUrlFor(serviceId, params) {
+  const qs = calParams(params).toString();
+  return `https://cal.com/${calLinkFor(serviceId)}${qs ? `?${qs}` : ''}`;
 }
 
 /**
@@ -82,7 +101,7 @@ export function calUrlFor(serviceId) {
  * limitation, not a bug here. Verify against the live account before
  * promising trilingual booking.
  */
-export function mountCal(container, serviceId) {
+export function mountCal(container, serviceId, params = {}) {
   ensureCalLoader();
 
   const namespace = serviceId;
@@ -90,11 +109,18 @@ export function mountCal(container, serviceId) {
 
   window.Cal('init', namespace, { origin: 'https://cal.com' });
 
+  // Cal's embed turns every `config` key into a query param on the booking
+  // page (embed-core's buildFilteredQueryParams), so duration and notes
+  // ride along with the layout and locale. Values go in raw — the embed
+  // does its own encoding.
+  const config = { layout: CAL.layout, theme: CAL.theme, locale: lang };
+  for (const [key, value] of calParams(params)) config[key] = value;
+
   window.Cal.ns[namespace]('inline', {
     elementOrSelector: container,
     calLink: calLinkFor(serviceId),
     layout: CAL.layout,
-    config: { layout: CAL.layout, theme: CAL.theme, locale: lang },
+    config,
   });
 
   window.Cal.ns[namespace]('ui', {
